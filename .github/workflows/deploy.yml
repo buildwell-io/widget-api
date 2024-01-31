@@ -26,4 +26,3 @@ jobs:
           key: ${{ secrets.GA_USER_KEY }}
           target: ${{ secrets.DEPLOY_DIR }}
           source: ./dist/widget-api/*,./node_modules/*,package.json
-          strip_components: 2
