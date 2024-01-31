@@ -25,5 +25,5 @@ jobs:
           username: ${{ secrets.GA_USER }}
           key: ${{ secrets.GA_USER_KEY }}
           target: ${{ secrets.DEPLOY_DIR }}
-          source: *
+          source: ./*
           strip_components: 3
