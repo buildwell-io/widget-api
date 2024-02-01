@@ -10,27 +10,27 @@ import { AppModule } from './app/app.module';
 import { buildSwagger } from '@core/build-swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule);
 
-  app.use((req, res, next) => {
-    res.removeHeader('X-Powered-By');
-    next();
-  });
+    app.use((req, res, next) => {
+        res.removeHeader('X-Powered-By');
+        next();
+    });
 
-  app.enableCors();
-  app.setGlobalPrefix('api');
+    app.enableCors();
+    app.setGlobalPrefix('api');
 
-  app.enableVersioning({
-    type: VersioningType.URI,
-    defaultVersion: '1'
-  });
+    app.enableVersioning({
+        type: VersioningType.URI,
+        defaultVersion: '1',
+    });
 
-  buildSwagger(app);
+    buildSwagger(app);
 
-  const port = process.env.PORT || 3000;
-  app.listen(port).then(() => {
-    Logger.log(`🚀 Application is running on: http://localhost:${port}`);
-  });
+    const port = process.env.PORT || 3000;
+    app.listen(port).then(() => {
+        Logger.log(`🚀 Application is running on: http://localhost:${port}`);
+    });
 }
 
 bootstrap();

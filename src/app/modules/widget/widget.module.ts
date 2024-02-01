@@ -3,7 +3,8 @@ import { WidgetController } from './widget.controller';
 import { WidgetService } from './widget.service';
 
 @Module({
-  controllers: [WidgetController],
-  providers: [WidgetService],
+    controllers: [ WidgetController ],
+    providers: [ WidgetService ],
 })
-export class WidgetModule {}
+export class WidgetModule {
+}
