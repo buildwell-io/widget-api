@@ -9,5 +9,6 @@ export class AdminController {
     }
 
     @Post('client')
-    clientCreate() {}
+    clientCreate() {
+    }
 }

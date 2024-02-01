@@ -20,11 +20,11 @@
       "@core/*": [
         "src/app/core/*"
       ],
-      "@modules/*": [
-        "src/app/modules/*"
-      ],
       "@interfaces/*": [
         "src/app/interfaces/*"
+      ],
+      "@modules/*": [
+        "src/app/modules/*"
       ]
     },
     "esModuleInterop": true

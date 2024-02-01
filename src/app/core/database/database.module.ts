@@ -19,7 +19,7 @@ import { AccountEntity } from './entities/account.entity';
                 ssl: {
                     ca: fs.readFileSync(configService.get('POSTGRES_CERT_PATH')).toString(),
                 },
-                entities: [AccountEntity],
+                entities: [ AccountEntity ],
             }),
             inject: [ ConfigService ],
         }),

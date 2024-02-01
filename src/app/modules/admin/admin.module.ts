@@ -1,8 +1,8 @@
+import { AccountEntity } from '@core/database/entities/account.entity';
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
-import { AccountEntity } from '@core/database/entities/account.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
     imports: [ TypeOrmModule.forFeature([ AccountEntity ]) ],
@@ -10,4 +10,5 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     providers: [ AdminService ],
 })
 export class AdminModule {
+
 }
