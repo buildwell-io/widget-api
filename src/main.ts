@@ -3,18 +3,34 @@
  * This is only a minimal backend to get started.
  */
 
-import { Logger } from '@nestjs/common';
+import { Logger, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
+import { buildSwagger } from '@core/build-swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
+
+  app.use((req, res, next) => {
+    res.removeHeader('X-Powered-By');
+    next();
+  });
+
+  app.enableCors();
+  app.setGlobalPrefix('api');
+
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1'
+  });
+
+  buildSwagger(app);
+
   const port = process.env.PORT || 3000;
-  await app.listen(port);
-  Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
+  app.listen(port).then(() => {
+    Logger.log(`🚀 Application is running on: http://localhost:${port}`);
+  });
 }
 
 bootstrap();
