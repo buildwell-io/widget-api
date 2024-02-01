@@ -4,10 +4,11 @@ import { CustomConfigModule } from '@core/config/config.module';
 import { CustomThrottlerModule } from '@core/throttler.module';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
-import { DatabaseModule } from '@core/database.module';
+import { DatabaseModule } from '@core/database/database.module';
+import { AdminModule } from '@modules/admin/admin.module';
 
 @Module({
-    imports: [ CustomConfigModule, CustomThrottlerModule, DatabaseModule, WidgetModule ],
+    imports: [ CustomConfigModule, CustomThrottlerModule, DatabaseModule, AdminModule, WidgetModule ],
     providers: [
         {
             provide: APP_GUARD,

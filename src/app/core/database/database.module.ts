@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as fs from 'fs';
+import { AccountEntity } from './entities/account.entity';
 
 @Module({
     imports: [
@@ -18,7 +19,7 @@ import * as fs from 'fs';
                 ssl: {
                     ca: fs.readFileSync(configService.get('POSTGRES_CERT_PATH')).toString(),
                 },
-                entities: [],
+                entities: [AccountEntity],
             }),
             inject: [ ConfigService ],
         }),

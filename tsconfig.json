@@ -22,6 +22,9 @@
       ],
       "@modules/*": [
         "src/app/modules/*"
+      ],
+      "@interfaces/*": [
+        "src/app/interfaces/*"
       ]
     },
     "esModuleInterop": true
