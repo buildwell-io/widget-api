@@ -3,6 +3,9 @@
 # env
 .env
 
+# certs
+*.crt
+
 # compiled output
 dist
 tmp
