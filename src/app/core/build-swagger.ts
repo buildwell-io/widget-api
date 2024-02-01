@@ -8,5 +8,5 @@ export function buildSwagger(app: INestApplication): void {
     extraModels: []
   });
 
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('api/docs', app, document);
 }
