@@ -5,7 +5,16 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "*** Release ***": "",
+    "release": "npm version --commit-hooks false --workspaces-update false --preid 'rc'",
+    "release:major": "npm run release -- major",
+    "release:minor": "npm run release -- minor",
+    "release:patch": "npm run release -- patch",
+    "release:major:rc": "npm run release -- premajor",
+    "release:minor:rc": "npm run release -- preminor",
+    "release:patch:rc": "npm run release -- prepatch",
+    "release:rc": "npm run release -- prerelease"
   },
   "private": true,
   "dependencies": {
