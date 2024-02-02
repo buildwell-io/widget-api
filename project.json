@@ -1,5 +1,5 @@
 {
-  "name": "widget-api",
+  "name": "backend",
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "src",
   "projectType": "application",
@@ -13,7 +13,7 @@
       "options": {
         "target": "node",
         "compiler": "tsc",
-        "outputPath": "dist/widget-api",
+        "outputPath": "dist/backend",
         "main": "src/main.ts",
         "tsConfig": "tsconfig.app.json",
         "assets": [
@@ -30,14 +30,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "widget-api:build"
+        "buildTarget": "backend:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "widget-api:build:development"
+          "buildTarget": "backend:build:development"
         },
         "production": {
-          "buildTarget": "widget-api:build:production"
+          "buildTarget": "backend:build:production"
         }
       }
     },
