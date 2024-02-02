@@ -16,6 +16,7 @@ import ms from 'ms';
 import { JWTPayload } from './interfaces/jwt-payload.interface';
 import { AuthResponse } from '@modules/authentication/interfaces/auth-response.interface';
 import { Account } from '@interfaces/account.interface';
+import { ChangePasswordDTO } from '@modules/authentication/dto/change-password.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -49,12 +50,14 @@ export class AuthenticationService {
         return this.signTokensAndUpdateUser(account);
     }
 
-    async signOut(jwtPayload: JWTPayload) {
+    async signOut(jwtPayload: JWTPayload): Promise<unknown> {
         if (!await this.accountService.exists(jwtPayload.userId)) {
             throw new NotFoundException();
         }
 
         await this.accountService.update(jwtPayload.userId, { refreshToken: null });
+
+        return Promise.resolve();
     }
 
     async refresh(payload: RefreshDTO, jwtPayload: JWTPayload): Promise<AuthResponse> {
@@ -71,6 +74,25 @@ export class AuthenticationService {
         }
 
         return this.signTokensAndUpdateUser(account);
+    }
+
+    async changePassword(payload: ChangePasswordDTO, jwtPayload: JWTPayload): Promise<unknown> {
+        if (!await this.accountService.exists(jwtPayload.userId)) {
+            throw new NotFoundException();
+        }
+
+        const account = await this.accountService.get(jwtPayload.userId);
+        if (!await bcrypt.compare(payload.oldPassword, account.password)) {
+            throw new BadRequestException();
+        }
+
+        const newPassword = await bcrypt.hash(payload.newPassword, 10);
+        await this.accountService.update(jwtPayload.userId, {
+            password: newPassword,
+            refreshToken: null,
+        });
+
+        return Promise.resolve();
     }
 
     private getPayload(account: Account): JWTPayload {

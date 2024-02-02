@@ -29,11 +29,11 @@ export class AccountEntity implements Account {
 
     @Column({
         type: 'enum',
-        enum: [ 'user', 'admin' ],
-        default: 'user',
+        enum: [ Role.User, Role.Admin ],
+        default: Role.User,
         comment: "Account role"
     })
-    @ApiProperty({ example: 'user' })
+    @ApiProperty({ example: Role.User })
     public role: Role;
 
     @Column({

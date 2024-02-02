@@ -3,10 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AccountEntity } from '@core/database/entities/account.entity';
 import { DeepPartial, Repository, UpdateResult } from 'typeorm';
 import { Account } from '@interfaces/account.interface';
+import { JWTPayload } from '@modules/authentication/interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AccountService {
     constructor(@InjectRepository(AccountEntity) private readonly accountRepository: Repository<Account>) {
+    }
+
+    async accountMe(jwtPayload: JWTPayload): Promise<Account> {
+        return this.get(jwtPayload.userId);
     }
 
     async create(payload: DeepPartial<Account>): Promise<Account> {

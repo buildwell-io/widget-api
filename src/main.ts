@@ -3,8 +3,8 @@
  * This is only a minimal backend to get started.
  */
 
-import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { ClassSerializerInterceptor, Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
 import { buildSwagger } from '@core/build-swagger';
@@ -20,6 +20,7 @@ async function bootstrap() {
     app.enableCors();
     app.setGlobalPrefix('api');
     app.useGlobalPipes(new ValidationPipe({ disableErrorMessages: true }));
+    app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
     app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
 
     buildSwagger(app);

@@ -1,10 +1,12 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, Version } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Version } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import {
-    ApiBadRequestResponse, ApiBearerAuth,
+    ApiBadRequestResponse,
+    ApiBearerAuth,
     ApiConflictResponse,
     ApiCreatedResponse,
-    ApiForbiddenResponse, ApiHeader,
+    ApiForbiddenResponse,
+    ApiHeader,
     ApiNotFoundResponse,
     ApiOkResponse,
     ApiOperation,
@@ -65,7 +67,7 @@ export class AuthenticationController {
     @ApiOkResponse({ description: 'Signed out' })
     @ApiUnauthorizedResponse({ description: 'The account was not signed in' })
     @ApiTooManyRequestsResponse({ description: 'Too many requests. (The maximum is 3/sec)' })
-    signOut(@ExtractJWTPayload() jwtPayload: JWTPayload) {
+    signOut(@ExtractJWTPayload() jwtPayload: JWTPayload): Promise<unknown> {
         return this.authenticationService.signOut(jwtPayload);
     }
 
