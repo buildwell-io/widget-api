@@ -13,7 +13,6 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import ms from 'ms';
-import { JWTPayload } from './interfaces/jwt-payload.interface';
 import { AuthResponse } from '@modules/authentication/interfaces/auth-response.interface';
 import { Account } from '@interfaces/account.interface';
 
@@ -49,22 +48,22 @@ export class AuthenticationService {
         return this.signTokensAndUpdateUser(account);
     }
 
-    async signOut(jwtPayload: JWTPayload): Promise<unknown> {
-        if (!await this.accountService.exists(jwtPayload.userId)) {
+    async signOut(user: Express.User): Promise<unknown> {
+        if (!await this.accountService.exists(user.id)) {
             throw new NotFoundException();
         }
 
-        await this.accountService.update(jwtPayload.userId, { refreshToken: null });
+        await this.accountService.update(user.id, { refreshToken: null });
 
         return Promise.resolve();
     }
 
-    async refresh(payload: RefreshDTO, jwtPayload: JWTPayload): Promise<AuthResponse> {
-        if (!await this.accountService.exists(jwtPayload.userId)) {
+    async refresh(payload: RefreshDTO, user: Express.User): Promise<AuthResponse> {
+        if (!await this.accountService.exists(user.id)) {
             throw new NotFoundException();
         }
 
-        const account = await this.accountService.get(jwtPayload.userId);
+        const account = await this.accountService.get(user.id);
         if (!payload.refreshToken ||
             !account.refreshToken ||
             !await bcrypt.compare(payload.refreshToken, account.refreshToken)
@@ -75,11 +74,8 @@ export class AuthenticationService {
         return this.signTokensAndUpdateUser(account);
     }
 
-    private getPayload(account: Account): JWTPayload {
-        return {
-            userId: account.id,
-            role: account.role,
-        };
+    private getPayload({ id, role }: Account): Express.User {
+        return { id, role };
     }
 
     private async signTokensAndUpdateUser(account: Account): Promise<AuthResponse> {
@@ -89,27 +85,27 @@ export class AuthenticationService {
         return { access, refresh };
     }
 
-    private async signTokens(payload: JWTPayload): Promise<AuthResponse> {
-        const access = await this.signAccessToken(payload);
-        const refresh = await this.signRefreshToken(payload);
+    private async signTokens(user: Express.User): Promise<AuthResponse> {
+        const access = await this.signAccessToken(user);
+        const refresh = await this.signRefreshToken(user);
         return { access, refresh };
     }
 
-    private async signAccessToken(payload: JWTPayload): Promise<AuthResponse['access']> {
+    private async signAccessToken(user: Express.User): Promise<AuthResponse['access']> {
         const secret = this.configService.get('JWT_ACCESS_SECRET');
         const expiresIn = this.configService.get('JWT_ACCESS_EXPIRE');
 
-        const token = await this.jwtService.signAsync(payload, { secret, expiresIn });
+        const token = await this.jwtService.signAsync(user, { secret, expiresIn });
         const expiresAt = Date.now() + Number(ms(expiresIn));
 
         return { token, expiresAt };
     }
 
-    private async signRefreshToken(payload: JWTPayload): Promise<AuthResponse['refresh']> {
+    private async signRefreshToken(user: Express.User): Promise<AuthResponse['refresh']> {
         const secret = this.configService.get('JWT_REFRESH_SECRET');
         const expiresIn = this.configService.get('JWT_REFRESH_EXPIRE');
 
-        const token = await this.jwtService.signAsync(payload, { secret, expiresIn });
+        const token = await this.jwtService.signAsync(user, { secret, expiresIn });
         const expiresAt = Date.now() + Number(ms(expiresIn));
 
         return { token, expiresAt };

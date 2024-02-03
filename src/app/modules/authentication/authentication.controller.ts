@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Version } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Req, Version } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import {
     ApiBadRequestResponse,
@@ -19,8 +19,6 @@ import { SignUpDTO } from './dto/sign-up.dto';
 import { SignInDTO } from './dto/sign-in.dto';
 import { RefreshDTO } from './dto/refresh.dto';
 import { PublicApi } from './decorators/public-api.decorator';
-import { ExtractJWTPayload } from '@modules/authentication/decorators/jwt-payload.decorator';
-import { JWTPayload } from '@modules/authentication/interfaces/jwt-payload.interface';
 import { AuthResponseSwagger } from '@modules/authentication/interfaces/auth-response.interface';
 
 @ApiTags('authentication')
@@ -67,8 +65,8 @@ export class AuthenticationController {
     @ApiOkResponse({ description: 'Signed out' })
     @ApiUnauthorizedResponse({ description: 'The account was not signed in' })
     @ApiTooManyRequestsResponse({ description: 'Too many requests. (The maximum is 3/sec)' })
-    signOut(@ExtractJWTPayload() jwtPayload: JWTPayload): Promise<unknown> {
-        return this.authenticationService.signOut(jwtPayload);
+    signOut(@Req() { user }: Express.Request): Promise<unknown> {
+        return this.authenticationService.signOut(user);
     }
 
     @Post('refresh')
@@ -83,7 +81,7 @@ export class AuthenticationController {
     @ApiForbiddenResponse({ description: 'Refresh token does not exist or is invalid' })
     @ApiNotFoundResponse({ description: 'Not found an account request made with' })
     @ApiTooManyRequestsResponse({ description: 'Too many requests. (The maximum is 3/sec)' })
-    refresh(@Body() payload: RefreshDTO, @ExtractJWTPayload() jwtPayload: JWTPayload) {
-        return this.authenticationService.refresh(payload, jwtPayload);
+    refresh(@Body() payload: RefreshDTO, @Req() { user }: Express.Request) {
+        return this.authenticationService.refresh(payload, user);
     }
 }
