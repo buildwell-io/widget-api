@@ -1,4 +1,4 @@
-import { Account } from '@interfaces/account.interface';
+import { Account } from '@core/interfaces';
 
 declare global {
     /*
@@ -6,7 +6,8 @@ declare global {
     * adds it to `Request` interface. We just extend that `User` interface
     * */
     namespace Express {
-        interface User extends Pick<Account, 'id' | 'role'> {
+        interface User extends Pick<Account, 'id' | 'role' | 'refreshToken'> {
+            refreshToken?: string;
         }
     }
 }

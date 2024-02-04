@@ -12,10 +12,24 @@
         "*.ts",
         "*.tsx"
       ],
+      "plugins": [ "import", "@typescript-eslint", "simple-import-sort" ],
       "extends": [
         "plugin:@nx/typescript"
       ],
-      "rules": {}
+      "rules": {
+        // importing rules
+        "sort-imports": "off",
+        "import/order": "off",
+        "simple-import-sort/imports": "error",
+        "simple-import-sort/exports": "error",
+        "import/first": "error",
+        "import/newline-after-import": [
+          "error", {
+            "count": 1
+          }
+        ],
+        "import/no-duplicates": "error"
+      }
     },
     {
       "files": [
@@ -25,7 +39,7 @@
       "extends": [
         "plugin:@nx/javascript"
       ],
-      "rules": {}
+      "rules": { }
     },
     {
       "files": [
@@ -37,7 +51,7 @@
       "env": {
         "jest": true
       },
-      "rules": {}
+      "rules": { }
     }
   ]
 }

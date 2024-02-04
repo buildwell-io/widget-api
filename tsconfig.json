@@ -17,20 +17,22 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@core/*": [
-        "src/app/core/*"
-      ],
-      "@interfaces/*": [
-        "src/app/interfaces/*"
-      ],
-      "@modules/*": [
-        "src/app/modules/*"
-      ]
+      "@core/config": [ "src/app/core/config/index" ],
+      "@core/database": [ "src/app/core/database/index" ],
+      "@core/filters": [ "src/app/core/filters/index" ],
+      "@core/global": [ "src/app/core/global/index" ],
+      "@core/interfaces": [ "src/app/core/interfaces/index" ],
+      "@core/swagger": [ "src/app/core/swagger/index" ],
+      "@core/throttle": [ "src/app/core/throttle/index" ],
+      "@modules/account": [ "src/app/modules/account/index" ],
+      "@modules/authentication": [ "src/app/modules/authentication/index" ],
+      "@modules/authorization": [ "src/app/modules/authorization/index" ],
+      "@modules/widget": [ "src/app/modules/widget/index" ]
     },
     "esModuleInterop": true
   },
-  "files": [],
-  "include": [],
+  "files": [ ],
+  "include": [ ],
   "references": [
     {
       "path": "./tsconfig.app.json"

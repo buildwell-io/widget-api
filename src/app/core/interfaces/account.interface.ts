@@ -1,4 +1,4 @@
-import { Role } from '@modules/authorization/role.enum';
+import { Role } from '@modules/authorization';
 
 export interface Account {
     id: number;

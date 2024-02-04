@@ -1,20 +1,13 @@
-import {
-    BadRequestException,
-    ConflictException,
-    ForbiddenException,
-    Injectable,
-    NotFoundException,
-} from '@nestjs/common';
-import { SignUpDTO } from './dto/sign-up.dto';
-import { SignInDTO } from './dto/sign-in.dto';
-import { RefreshDTO } from './dto/refresh.dto';
-import { AccountService } from '@modules/account/account.service';
-import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
+import { Account } from '@core/interfaces';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
 import ms from 'ms';
-import { AuthResponse } from '@modules/authentication/interfaces/auth-response.interface';
-import { Account } from '@interfaces/account.interface';
+
+import { AccountService } from '../account';
+import { SignInDTO, SignUpDTO } from './dto';
+import { AuthResponse } from './interfaces';
 
 @Injectable()
 export class AuthenticationService {
@@ -58,27 +51,24 @@ export class AuthenticationService {
         return Promise.resolve();
     }
 
-    async refresh(payload: RefreshDTO, user: Express.User): Promise<AuthResponse> {
+    async refresh(user: Express.User): Promise<AuthResponse> {
         if (!await this.accountService.exists(user.id)) {
             throw new NotFoundException();
         }
 
         const account = await this.accountService.get(user.id);
-        if (!payload.refreshToken ||
-            !account.refreshToken ||
-            !await bcrypt.compare(payload.refreshToken, account.refreshToken)
-        ) {
-            throw new ForbiddenException();
+        if (!await bcrypt.compare(user.refreshToken, account.refreshToken)) {
+            throw new BadRequestException();
         }
 
-        return this.signTokensAndUpdateUser(account);
+        return this.signTokensAndUpdateUser(user);
     }
 
-    private getPayload({ id, role }: Account): Express.User {
+    private getPayload({ id, role }: Account | Express.User): Express.User {
         return { id, role };
     }
 
-    private async signTokensAndUpdateUser(account: Account): Promise<AuthResponse> {
+    private async signTokensAndUpdateUser(account: Account | Express.User): Promise<AuthResponse> {
         const { access, refresh } = await this.signTokens(this.getPayload(account));
         account.refreshToken = await bcrypt.hash(refresh.token, 10);
         await this.accountService.save(account);

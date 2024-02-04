@@ -1,6 +1,6 @@
+import { AccountEntity, WidgetEntity } from '@core/database';
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AccountEntity } from '@core/database/entities/account.entity';
 
 export function buildSwagger(app: INestApplication): void {
     const options = new DocumentBuilder()
@@ -10,7 +10,7 @@ export function buildSwagger(app: INestApplication): void {
         .build();
 
     const document = SwaggerModule.createDocument(app, options, {
-        extraModels: [ AccountEntity ],
+        extraModels: [ AccountEntity, WidgetEntity ],
     });
 
     SwaggerModule.setup('api/docs', app, document);

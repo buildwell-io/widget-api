@@ -1,8 +1,8 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Account } from '@core/interfaces';
+import { Role } from '@modules/authorization';
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { Account } from '@interfaces/account.interface';
-import { Role } from '@modules/authorization/role.enum';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('account')
 export class AccountEntity implements Account {
@@ -22,7 +22,7 @@ export class AccountEntity implements Account {
         type: 'varchar',
         length: 254,
         unique: true,
-        comment: "Account email",
+        comment: 'Account email',
     })
     @ApiProperty({ example: 'john.doe@gmail.com' })
     public email: string;
@@ -31,7 +31,7 @@ export class AccountEntity implements Account {
         type: 'enum',
         enum: [ Role.User, Role.Admin ],
         default: Role.User,
-        comment: "Account role"
+        comment: 'Account role',
     })
     @ApiProperty({ example: Role.User })
     public role: Role;

@@ -1,8 +1,8 @@
+import { AccountEntity } from '@core/database';
+import { Account } from '@core/interfaces';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AccountEntity } from '@core/database/entities/account.entity';
 import { DeepPartial, Repository, UpdateResult } from 'typeorm';
-import { Account } from '@interfaces/account.interface';
 
 @Injectable()
 export class AccountService {

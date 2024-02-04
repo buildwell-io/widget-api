@@ -1,3 +1,5 @@
+import { AccountEntity } from '@core/database';
+import { Account } from '@core/interfaces';
 import { Controller, Get, Req, Version } from '@nestjs/common';
 import {
     ApiBearerAuth,
@@ -8,16 +10,15 @@ import {
     ApiTooManyRequestsResponse,
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { Account } from '@interfaces/account.interface';
-import { AccountEntity } from '@core/database/entities/account.entity';
+
 import { AccountService } from './account.service';
 
 @ApiTags('account')
 @Controller('account')
-@ApiHeader({ name: 'Authorization', required: true, description: 'Bearer eyJhbGciOi...' })
+@ApiHeader({ name: 'Authorization', required: true, description: 'Bearer <access_token>' })
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'The account was not signed in' })
-@ApiTooManyRequestsResponse({ description: 'Too many requests. (The maximum is 16/sec)' })
+@ApiTooManyRequestsResponse({ description: 'Too many requests (16/sec)' })
 export class AccountController {
     constructor(private readonly accountService: AccountService) {
     }

@@ -1,11 +1,10 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, Version } from '@nestjs/common';
-import { AuthenticationService } from './authentication.service';
+import { AuthResponseSwagger, HttpExceptionEntity } from '@core/swagger';
+import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards, Version } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
     ApiBearerAuth,
     ApiConflictResponse,
     ApiCreatedResponse,
-    ApiForbiddenResponse,
     ApiHeader,
     ApiNotFoundResponse,
     ApiOkResponse,
@@ -15,73 +14,79 @@ import {
     ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import { SignUpDTO } from './dto/sign-up.dto';
-import { SignInDTO } from './dto/sign-in.dto';
-import { RefreshDTO } from './dto/refresh.dto';
-import { PublicApi } from './decorators/public-api.decorator';
-import { AuthResponseSwagger } from '@modules/authentication/interfaces/auth-response.interface';
+
+import { AuthenticationService } from './authentication.service';
+import { PublicApi } from './decorators';
+import { SignInDTO, SignUpDTO } from './dto';
+import { RefreshTokenGuard } from './guards';
 
 @ApiTags('authentication')
 @Controller('authentication')
-@ApiTooManyRequestsResponse({ description: 'Too many requests. (The maximum is 16/sec)' })
+@Throttle({ default: { limit: 3, ttl: 60_000 } })
+@ApiTooManyRequestsResponse({ description: 'Too many requests (3/sec)' })
 export class AuthenticationController {
-    constructor(private readonly authenticationService: AuthenticationService) {
-    }
+    constructor(private readonly authenticationService: AuthenticationService) {}
 
+    // region sign-up
     @Post('sign-up')
     @Version('1')
     @PublicApi()
-    @Throttle({ default: { limit: 3, ttl: 60_000 } })
     @ApiOperation({ summary: 'Create an account' })
     @ApiCreatedResponse({ description: 'Account created', type: AuthResponseSwagger })
-    @ApiBadRequestResponse({ description: 'Wrong data passed' })
+    @ApiBadRequestResponse({ description: 'Invalid payload' })
     @ApiConflictResponse({ description: 'Account already exists' })
-    @ApiTooManyRequestsResponse({ description: 'Too many requests. (The maximum is 3/sec)' })
     signUp(@Body() payload: SignUpDTO) {
         return this.authenticationService.signUp(payload);
     }
 
+    // endregion
+
+    // region sign-in
     @Post('sign-in')
     @Version('1')
     @PublicApi()
-    @Throttle({ default: { limit: 3, ttl: 60_000 } })
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Sign in exists account' })
     @ApiOkResponse({ description: 'Signed in', type: AuthResponseSwagger })
-    @ApiBadRequestResponse({ description: 'Wrong password' })
-    @ApiNotFoundResponse({ description: 'Account does not exist' })
-    @ApiTooManyRequestsResponse({ description: 'Too many requests. (The maximum is 3/sec)' })
+    @ApiBadRequestResponse({ description: 'Wrong data passed', type: HttpExceptionEntity })
+    @ApiNotFoundResponse({ description: 'Account does not exist', type: HttpExceptionEntity })
     signIn(@Body() payload: SignInDTO) {
         return this.authenticationService.signIn(payload);
     }
 
+    // endregion
+
+    // region sign-out
     @Post('sign-out')
     @Version('1')
-    @Throttle({ default: { limit: 3, ttl: 60_000 } })
     @HttpCode(HttpStatus.OK)
-    @ApiHeader({ name: 'Authorization', required: true, description: 'Bearer eyJhbGciOi...' })
+    @ApiHeader({ name: 'Authorization', required: true, description: 'Bearer <access_token>' })
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Sign out an account' })
     @ApiOkResponse({ description: 'Signed out' })
-    @ApiUnauthorizedResponse({ description: 'The account was not signed in' })
-    @ApiTooManyRequestsResponse({ description: 'Too many requests. (The maximum is 3/sec)' })
+    @ApiUnauthorizedResponse({ description: 'The account was not signed in', type: HttpExceptionEntity })
+    @ApiNotFoundResponse({ description: 'Account does not exist', type: HttpExceptionEntity })
     signOut(@Req() { user }: Express.Request): Promise<unknown> {
         return this.authenticationService.signOut(user);
     }
 
+    // endregion
+
+    // region refresh
     @Post('refresh')
     @Version('1')
-    @Throttle({ default: { limit: 3, ttl: 60_000 } })
+    @PublicApi()
+    @UseGuards(RefreshTokenGuard)
     @HttpCode(HttpStatus.OK)
-    @ApiHeader({ name: 'Authorization', required: true, description: 'Bearer eyJhbGciOi...' })
+    @ApiHeader({ name: 'Authorization', required: true, description: 'Bearer <refresh_token>' })
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Refresh tokens' })
     @ApiOkResponse({ description: 'Tokens refreshed', type: AuthResponseSwagger })
-    @ApiUnauthorizedResponse({ description: 'The account was not signed in' })
-    @ApiForbiddenResponse({ description: 'Refresh token does not exist or is invalid' })
-    @ApiNotFoundResponse({ description: 'Not found an account request made with' })
-    @ApiTooManyRequestsResponse({ description: 'Too many requests. (The maximum is 3/sec)' })
-    refresh(@Body() payload: RefreshDTO, @Req() { user }: Express.Request) {
-        return this.authenticationService.refresh(payload, user);
+    @ApiBadRequestResponse({ description: 'Invalid refresh token', type: HttpExceptionEntity })
+    @ApiNotFoundResponse({ description: 'Account does not exist', type: HttpExceptionEntity })
+    refresh(@Req() { user }: Express.Request) {
+        return this.authenticationService.refresh(user);
     }
+
+    // endregion
 }

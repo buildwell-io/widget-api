@@ -1,13 +1,13 @@
-import { Account } from '@interfaces/account.interface';
-import { IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { Account } from '@core/interfaces';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class SignUpDTO implements Pick<Account, 'name' | 'email' | 'password'> {
     @MaxLength(64)
     @IsNotEmpty()
     @IsString()
     @IsOptional()
-    @ApiProperty({example: 'John Doe', required: false })
+    @ApiProperty({ example: 'John Doe', required: false })
     readonly name: string;
 
     @ApiProperty({ example: 'john.doe@gmail.com' })

@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+
+import { AccountModule } from '../account';
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
-import { JwtModule } from '@nestjs/jwt';
-import { AccessTokenStrategy } from './strategies/access-token.strategy';
-import { AccountModule } from '@modules/account/account.module';
+import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
 
 @Module({
     imports: [ AccountModule, JwtModule.register({}) ],
     controllers: [ AuthenticationController ],
-    providers: [ AuthenticationService, AccessTokenStrategy ],
+    providers: [ AuthenticationService, AccessTokenStrategy, RefreshTokenStrategy ],
 })
 export class AuthenticationModule {
 }

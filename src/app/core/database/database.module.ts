@@ -1,8 +1,10 @@
+import { WidgetEntity } from '@core/database';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as fs from 'fs';
-import { AccountEntity } from './entities/account.entity';
+
+import { AccountEntity } from './entities';
 
 @Module({
     imports: [
@@ -10,6 +12,11 @@ import { AccountEntity } from './entities/account.entity';
             imports: [ ConfigModule ],
             useFactory: (configService: ConfigService) => {
                 const POSTGRES_CERT_PATH = configService.get('POSTGRES_CERT_PATH');
+                const NODE_ENV = configService.get('NODE_ENV');
+
+                const ssl = POSTGRES_CERT_PATH
+                    ? { ca: fs.readFileSync(POSTGRES_CERT_PATH).toString() }
+                    : undefined;
 
                 return {
                     type: 'postgres',
@@ -19,9 +26,9 @@ import { AccountEntity } from './entities/account.entity';
                     database: configService.get('POSTGRES_DATABASE'),
                     username: configService.get('POSTGRES_USERNAME'),
                     password: configService.get('POSTGRES_PASSWORD'),
-                    ssl: POSTGRES_CERT_PATH ? { ca: fs.readFileSync(POSTGRES_CERT_PATH).toString() } : undefined,
-                    entities: [ AccountEntity ],
-                    synchronize: true, // WARNING: Must be disabled on production
+                    ssl,
+                    entities: [ AccountEntity, WidgetEntity ],
+                    synchronize: NODE_ENV === 'development',
                 };
             },
             inject: [ ConfigService ],
