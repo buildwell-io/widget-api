@@ -14,7 +14,10 @@
     "release:major:rc": "npm run release -- premajor",
     "release:minor:rc": "npm run release -- preminor",
     "release:patch:rc": "npm run release -- prepatch",
-    "release:rc": "npm run release -- prerelease"
+    "release:rc": "npm run release -- prerelease",
+    "*** Local ***": "",
+    "local:create-db": "docker run --name dev-local-postgres -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 postgres:16",
+    "local:serve-db": "docker start dev-local-postgres"
   },
   "private": true,
   "dependencies": {

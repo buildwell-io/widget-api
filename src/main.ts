@@ -8,7 +8,7 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
     // app.enableCors(); // TODO: Need investigation
-    app.setGlobalPrefix('api');
+    app.setGlobalPrefix('/');
     app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
 
     buildSwagger(app);

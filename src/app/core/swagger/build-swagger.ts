@@ -13,5 +13,5 @@ export function buildSwagger(app: INestApplication): void {
         extraModels: [ AccountEntity, WidgetEntity ],
     });
 
-    SwaggerModule.setup('api/docs', app, document);
+    SwaggerModule.setup('docs', app, document);
 }
