@@ -20,5 +20,6 @@ export const validationSchema = Joi.object({
     JWT_REFRESH_EXPIRE: Joi.string(),
     THROTTLE_TTL: Joi.number(),
     THROTTLE_LIMIT: Joi.number(),
+    SENDGRID_API_KEY: Joi.string(),
     // FALLBACK_LANGUAGE: Joi.string().valid('en', 'uk', 'ru').default('en'),
 });

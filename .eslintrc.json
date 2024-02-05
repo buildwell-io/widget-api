@@ -17,6 +17,8 @@
         "plugin:@nx/typescript"
       ],
       "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+
         // importing rules
         "sort-imports": "off",
         "import/order": "off",
