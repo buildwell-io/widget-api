@@ -10,4 +10,17 @@ declare global {
             refreshToken?: string;
         }
     }
+
+    interface PaginationRequest {
+        pageIndex: number;
+        perPage: number;
+    }
+
+    interface Paginated<T> {
+        data: T[];
+        requestPageIndex: number;
+        requestPerPage: number;
+        totalItems: number;
+        totalPages: number;
+    }
 }

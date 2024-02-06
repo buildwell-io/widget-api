@@ -1,18 +1,13 @@
 import { AccountEntity } from '@core/database';
 import { Account } from '@core/interfaces';
 import { MailService } from '@core/mail';
+import { assert } from '@core/utils';
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as speakeasy from 'speakeasy';
 import { DeepPartial, Repository, UpdateResult } from 'typeorm';
 
 import { EmailVerificationVerifyDTO } from './dto';
-
-function assert(condition: boolean, exception: () => Error) {
-    if (!condition) {
-        throw exception();
-    }
-}
 
 @Injectable()
 export class AccountService {

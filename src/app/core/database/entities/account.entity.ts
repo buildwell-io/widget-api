@@ -1,8 +1,18 @@
-import { Account } from '@core/interfaces';
+import { Account, Widget } from '@core/interfaces';
 import { Role } from '@modules/authorization';
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    RelationId,
+    UpdateDateColumn,
+} from 'typeorm';
+
+import { WidgetEntity } from './widget.entity';
 
 @Entity('account')
 export class AccountEntity implements Account {
@@ -52,4 +62,10 @@ export class AccountEntity implements Account {
     @UpdateDateColumn()
     @ApiProperty({ example: '2021-10-09T10:44:59.011Z' })
     public updatedAt: Date;
+
+    @OneToMany(() => WidgetEntity, (widget) => widget.owner)
+    public widgets: Widget[];
+
+    @RelationId((account: Account) => account.widgets)
+    public widgetIds: number[];
 }

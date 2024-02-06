@@ -9,6 +9,7 @@ import {
 import { CustomThrottlerModule } from '@core/throttle';
 import { AccountModule } from '@modules/account';
 import { AuthenticationModule } from '@modules/authentication';
+import { WidgetModule } from '@modules/widget';
 import { Module } from '@nestjs/common';
 
 @Module({
@@ -18,6 +19,7 @@ import { Module } from '@nestjs/common';
         DatabaseModule,
         AccountModule,
         AuthenticationModule,
+        WidgetModule,
     ],
     providers: [
         ...provideGlobalGuards(),

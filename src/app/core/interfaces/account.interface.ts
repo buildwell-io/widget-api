@@ -1,5 +1,7 @@
 import { Role } from '@modules/authorization';
 
+import { Widget } from './widget.interface';
+
 export interface Account {
     id: number;
     name: string;
@@ -12,4 +14,5 @@ export interface Account {
     refreshToken: string | null;
     createdAt: Date;
     updatedAt: Date;
+    widgets: Widget[];
 }
