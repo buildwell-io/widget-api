@@ -5,8 +5,11 @@ export interface Account {
     name: string;
     email: string;
     role: Role;
+    totpSecret: string | null;
+    totpCreatedAt: number | null;
+    isEmailVerified: boolean;
     password: string;
-    refreshToken: string;
+    refreshToken: string | null;
     createdAt: Date;
     updatedAt: Date;
 }

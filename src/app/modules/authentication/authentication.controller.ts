@@ -23,7 +23,7 @@ import { RefreshTokenGuard } from './guards';
 @ApiTags('authentication')
 @Controller('authentication')
 @Throttle({ default: { limit: 3, ttl: 60_000 } })
-@ApiTooManyRequestsResponse({ description: 'Too many requests (3/sec)' })
+@ApiTooManyRequestsResponse({ description: 'Too many requests (3/min)' })
 export class AuthenticationController {
     constructor(private readonly authenticationService: AuthenticationService) {}
 

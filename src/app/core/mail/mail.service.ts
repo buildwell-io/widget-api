@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { ClientResponse } from '@sendgrid/client/src/response';
 import { ResponseError } from '@sendgrid/helpers/classes';
 import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
-import * as sgMail from '@sendgrid/mail';
+import sgMail from '@sendgrid/mail';
 
 @Injectable()
 export class MailService {
@@ -13,11 +13,7 @@ export class MailService {
         sgMail.setApiKey(configService.get('SENDGRID_API_KEY'));
     }
 
-    sendFrom(from: string): Promise<boolean> {
-        return Promise.resolve(true);
-    }
-
-    private send(
+    async send(
         data: MailDataRequired | MailDataRequired[],
         isMultiple?: boolean,
         cb?: (err: Error | ResponseError, result: [ ClientResponse, Record<string, any> ]) => void,
