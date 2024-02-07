@@ -12,7 +12,6 @@ import { AccountEntity } from './entities';
             imports: [ ConfigModule ],
             useFactory: (configService: ConfigService) => {
                 const POSTGRES_CERT_PATH = configService.get('POSTGRES_CERT_PATH');
-                const NODE_ENV = configService.get('NODE_ENV');
 
                 const ssl = POSTGRES_CERT_PATH
                     ? { ca: fs.readFileSync(POSTGRES_CERT_PATH).toString() }
@@ -28,7 +27,7 @@ import { AccountEntity } from './entities';
                     password: configService.get('POSTGRES_PASSWORD'),
                     ssl,
                     entities: [ AccountEntity, WidgetEntity ],
-                    synchronize: NODE_ENV === 'development',
+                    synchronize: false,
                 };
             },
             inject: [ ConfigService ],
