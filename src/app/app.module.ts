@@ -1,27 +1,36 @@
-import { CustomConfigModule } from '@core/config';
-import { DatabaseModule } from '@core/database';
+import { CustomConfigModule } from '@app/config';
+import { AccountModule, AuthenticationModule, ConfirmationModule, WidgetModule } from '@app/controllers';
+import { AccountEntity, ConfirmationEntity, DatabaseModule, WidgetEntity } from '@app/database';
 import {
     provideGlobalFilters,
     provideGlobalGuards,
     provideGlobalInterceptors,
     provideGlobalPipes,
-} from '@core/global';
-import { CustomThrottlerModule } from '@core/throttle';
-import { AccountModule } from '@modules/account';
-import { AuthenticationModule } from '@modules/authentication';
-import { WidgetModule } from '@modules/widget';
+} from '@app/providers';
+import { AppConfirmationService, AppMailService } from '@app/services';
+import { AccessTokenStrategy, RefreshTokenStrategy } from '@app/strategies';
+import { CustomThrottlerModule } from '@app/throttle';
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
     imports: [
+        TypeOrmModule.forFeature([ AccountEntity, ConfirmationEntity, WidgetEntity ]),
+        ScheduleModule.forRoot(),
         CustomConfigModule,
         CustomThrottlerModule,
         DatabaseModule,
         AccountModule,
         AuthenticationModule,
+        ConfirmationModule,
         WidgetModule,
     ],
     providers: [
+        AppMailService,
+        AppConfirmationService,
+        AccessTokenStrategy,
+        RefreshTokenStrategy,
         ...provideGlobalGuards(),
         ...provideGlobalFilters(),
         ...provideGlobalInterceptors(),
