@@ -1,5 +1,5 @@
 import { buildSwagger } from '@app/swagger';
-import { Logger, VersioningType } from '@nestjs/common';
+import { HttpStatus, Logger, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
@@ -7,7 +7,15 @@ import { AppModule } from './app/app.module';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
-    // app.enableCors(); // TODO: Need investigation
+    app.enableCors({
+        origin: [ 'https://app.buildwell.io', 'https://widget.buildwell.io' ],
+        methods: [ 'GET', 'PATCH', 'POST', 'DELETE' ],
+        allowedHeaders: [ 'Content-Type', 'Accept', 'Authorization' ],
+        credentials: true,
+        preflightContinue: false,
+        optionsSuccessStatus: HttpStatus.NO_CONTENT,
+    });
+
     app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
 
     buildSwagger(app);
