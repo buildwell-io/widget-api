@@ -1,6 +1,6 @@
 import { Public } from '@app/decorators';
-import { Controller, Get, HttpStatus, Req } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, HttpStatus, ParseUUIDPipe, Query, Version } from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { WidgetAppService } from './widget-app.service';
 
@@ -12,12 +12,18 @@ import { WidgetAppService } from './widget-app.service';
 export class WidgetAppController {
     constructor(private readonly widgetAppService: WidgetAppService) {}
 
-    @Get()
-    async get(@Req() req: Express.Request) {
-        console.log('');
-        console.log('====================');
-        console.log('====================');
-        console.log(req);
+    @Get('verify')
+    @Version('1')
+    @ApiQuery({ name: 'key', type: String, example: '66aec774-2778-4363-ada3-628df95304d8' })
+    @ApiQuery({ name: 'referrer', type: String, example: 'https://buildwell.io' })
+    @ApiOperation({ summary: 'Verify a widget before its bootstrap' })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
+    @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid key or referrer' })
+    async get(
+        @Query('key', new ParseUUIDPipe({ version: '4' })) key: string,
+        @Query('referrer') referrer: string,
+    ) {
+        console.log('(VERIFY):', key, referrer);
         return { ok: true };
     }
 }
