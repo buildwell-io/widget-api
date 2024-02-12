@@ -27,7 +27,7 @@ export class ConfirmationEntity implements ConfirmationEntity {
     @ApiProperty({ example: ConfirmationAction.EmailConfirm })
     public action: ConfirmationAction;
 
-    @Column({ type: 'varchar' })
+    @Column({ type: 'uuid' })
     @Exclude()
     @ApiHideProperty()
     public token: string; // uuid4
