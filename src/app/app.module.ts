@@ -1,5 +1,11 @@
 import { CustomConfigModule } from '@app/config';
-import { AccountModule, AuthenticationModule, ConfirmationModule, WidgetModule } from '@app/controllers';
+import {
+    AccountModule,
+    AuthenticationModule,
+    ConfirmationModule,
+    WidgetAppModule,
+    WidgetModule,
+} from '@app/controllers';
 import { AccountEntity, ConfirmationEntity, DatabaseModule, WidgetEntity } from '@app/database';
 import {
     provideGlobalFilters,
@@ -25,6 +31,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         AuthenticationModule,
         ConfirmationModule,
         WidgetModule,
+        WidgetAppModule,
     ],
     providers: [
         AppMailService,
