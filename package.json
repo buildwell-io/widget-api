@@ -7,7 +7,7 @@
     "build": "nx build",
     "test": "nx test",
     "*** Release ***": "",
-    "release": "npm version --commit-hooks false --workspaces-update false --preid 'rc'",
+    "release": "npm version --git-tag-version false --commit-hooks false --workspaces-update false --preid 'rc'",
     "postrelease": "npm run exec -- scripts/postrelease.ts",
     "release:major": "npm run release -- major",
     "release:minor": "npm run release -- minor",
