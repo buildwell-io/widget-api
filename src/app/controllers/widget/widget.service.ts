@@ -3,6 +3,7 @@ import { Paginated, PaginationRequest } from '@app/interfaces';
 import { assert } from '@app/utilities';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { instanceToPlain } from 'class-transformer';
 import { Repository } from 'typeorm';
 
 import { CreateWidgetDTO, UpdateWidgetDTO } from './dto';
@@ -19,7 +20,12 @@ export class WidgetService {
     async create(payload: CreateWidgetDTO, { id }: Express.User): Promise<WidgetEntity> {
         const account = await this.accountRepository.findOneBy({ id });
         assert(account.hasConfirmedEmail, () => new ForbiddenException('Email is not verified'));
-        return await this.widgetRepository.save({ ...payload, owner: account });
+
+        const widget = new WidgetEntity();
+        widget.name = payload.name;
+        widget.owner = account;
+
+        return this.widgetRepository.save(widget);
     }
 
     async getList({
@@ -55,7 +61,7 @@ export class WidgetService {
         const widget = await this.widgetRepository.findOneBy({ id: widgetId });
         assert(!!widget, () => new NotFoundException('Widget not found'));
         assert(widget.ownerId === user.id, () => new ForbiddenException('You are not an owner'));
-        return this.widgetRepository.save({ ...widget, ...payload });
+        return this.widgetRepository.save({ ...instanceToPlain(widget), ...payload });
     }
 
     async delete(widgetId: number, user: Express.User): Promise<void> {
