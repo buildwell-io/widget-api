@@ -1,12 +1,12 @@
+import { PUBLIC_API_KEY } from '@app/decorators';
+import { ACCESS_TOKEN_STRATEGY_NAME } from '@app/strategies';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { Observable } from 'rxjs';
 
-import { PUBLIC_API_KEY } from '../decorators/public-api.decorator';
-
 @Injectable()
-export class AccessTokenGuard extends AuthGuard('jwt') implements CanActivate {
+export class AccessTokenGuard extends AuthGuard(ACCESS_TOKEN_STRATEGY_NAME) implements CanActivate {
     constructor(private reflector: Reflector) {
         super();
     }
