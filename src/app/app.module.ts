@@ -13,16 +13,28 @@ import {
     provideGlobalInterceptors,
     provideGlobalPipes,
 } from '@app/providers';
-import { AppConfirmationService, AppMailService } from '@app/services';
+import { AppConfirmationService, AppMailService, StripeModule } from '@app/services';
 import { AccessTokenStrategy, RefreshTokenStrategy } from '@app/strategies';
 import { CustomThrottlerModule } from '@app/throttle';
 import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([ AccountEntity, ConfirmationEntity, WidgetEntity ]),
+        StripeModule.forRootAsync({
+            inject: [ ConfigService ],
+            useFactory: (configService: ConfigService) => ({
+                apiKey: configService.get<string>('STRIPE_API_KEY'),
+                options: {
+                    apiVersion: '2023-10-16',
+                    typescript: true,
+                    telemetry: true,
+                },
+            }),
+        }),
         ScheduleModule.forRoot(),
         CustomConfigModule,
         CustomThrottlerModule,
