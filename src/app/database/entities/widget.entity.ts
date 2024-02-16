@@ -33,6 +33,11 @@ export class WidgetEntity {
     @ApiHideProperty()
     public ownerId: number;
 
+    @Column({ type: 'uuid' })
+    @Exclude()
+    @ApiHideProperty()
+    public key: string; // uuid4
+
     @CreateDateColumn({ type: 'timestamp with time zone' })
     @ApiProperty({ example: '2021-10-09T10:44:59.011Z' })
     public createdAt: Date;
