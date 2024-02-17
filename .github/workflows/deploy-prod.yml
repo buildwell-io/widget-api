@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy (production)
 
 on:
   push:
@@ -24,5 +24,5 @@ jobs:
           host: ${{ secrets.WIDGET_HOST }}
           username: ${{ secrets.GA_USER }}
           key: ${{ secrets.GA_USER_KEY }}
-          target: ${{ secrets.DEPLOY_DIR }}
+          target: ${{ secrets.PROD_DEPLOY_DIR }}
           source: ./dist/backend/*,./node_modules/*
