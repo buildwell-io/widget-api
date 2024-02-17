@@ -26,7 +26,9 @@ async function bootstrap() {
 
     app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
 
-    buildSwagger(app);
+    if (NODE_ENV === 'development') {
+        buildSwagger(app);
+    }
 
     const port = PORT || 3000;
     app.listen(port).then(() => {
