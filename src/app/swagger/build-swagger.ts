@@ -1,5 +1,14 @@
 import { APP_VERSION, APP_VERSION_AT } from '@app/constants';
-import { AccountEntity, ConfirmationEntity, WidgetEntity } from '@app/database';
+import {
+    AccountEntity,
+    CityEntity,
+    ConfirmationEntity,
+    CountryEntity,
+    RegionEntity,
+    StateEntity,
+    SubregionEntity,
+    WidgetEntity,
+} from '@app/database';
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -13,7 +22,16 @@ export function buildSwagger(app: INestApplication): void {
         .build();
 
     const document = SwaggerModule.createDocument(app, options, {
-        extraModels: [ AccountEntity, ConfirmationEntity, WidgetEntity ],
+        extraModels: [
+            RegionEntity,
+            SubregionEntity,
+            CountryEntity,
+            StateEntity,
+            CityEntity,
+            AccountEntity,
+            ConfirmationEntity,
+            WidgetEntity,
+        ],
     });
 
     SwaggerModule.setup('docs', app, document);

@@ -3,7 +3,16 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as fs from 'fs';
 
-import { AccountEntity, ConfirmationEntity, WidgetEntity } from './entities';
+import {
+    AccountEntity,
+    CityEntity,
+    ConfirmationEntity,
+    CountryEntity,
+    RegionEntity,
+    StateEntity,
+    SubregionEntity,
+    WidgetEntity,
+} from './entities';
 
 @Module({
     imports: [
@@ -25,7 +34,16 @@ import { AccountEntity, ConfirmationEntity, WidgetEntity } from './entities';
                     username: configService.get('POSTGRES_USERNAME'),
                     password: configService.get('POSTGRES_PASSWORD'),
                     ssl,
-                    entities: [ AccountEntity, ConfirmationEntity, WidgetEntity ],
+                    entities: [
+                        RegionEntity,
+                        SubregionEntity,
+                        CountryEntity,
+                        StateEntity,
+                        CityEntity,
+                        AccountEntity,
+                        ConfirmationEntity,
+                        WidgetEntity,
+                    ],
                     synchronize: false,
                 };
             },
