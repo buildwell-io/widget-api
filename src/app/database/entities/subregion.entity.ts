@@ -1,60 +1,122 @@
-import { RegionEntity } from '@app/database';
+import { CountryEntity, RegionEntity } from '@app/database';
+import { safeJSONParse } from '@app/utilities';
 import { ApiProperty } from '@nestjs/swagger';
 import {
     Column,
     CreateDateColumn,
     Entity,
-    ManyToOne, OneToMany,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
-    RelationId,
     UpdateDateColumn,
 } from 'typeorm';
-
-import { CountryEntity } from './country.entity';
 
 @Entity('subregions')
 export class SubregionEntity {
     @PrimaryGeneratedColumn()
-    @ApiProperty({ example: 1337 })
-    public id: number;
+    @ApiProperty({
+        description: 'The unique identifier of the subregion',
+        example: 1,
+    })
+    id: number;
 
-    @Column({ type: 'varchar' })
-    @ApiProperty({ example: 'Eastern Europe' })
-    public name: string;
+    @Column({
+        type: 'varchar',
+        length: 100,
+    })
+    @ApiProperty({
+        description: 'The name of the subregion',
+        maxLength: 100,
+        example: 'California',
+    })
+    name: string;
 
     @Column({
         type: 'text',
+        nullable: true,
         transformer: {
-            from: (raw: string): Record<string, string> => JSON.parse(raw),
-            to: (processed: Record<string, string>): string => JSON.stringify(processed),
+            from: (raw) => safeJSONParse(raw),
+            to: (processed) => JSON.stringify(processed),
         },
     })
-    @ApiProperty({ example: { 'en': 'Eastern Europe' } })
-    public translations: Record<string, string>; // key is `rfc5646`
+    @ApiProperty({
+        description: 'Translations for the subregion name',
+        nullable: true,
+        type: 'string',
+        example: { 'fr': 'Californie' },
+    })
+    translations: string | null; // key is `rfc5646`
 
-    @Column({ type: 'boolean' })
-    @ApiProperty({ example: true })
-    public flag: boolean;
+    @Column({
+        type: 'int',
+        name: 'region_id',
+    })
+    @ApiProperty({
+        description: 'The ID of the associated region',
+        example: 1,
+    })
+    regionId: number;
+
+    @CreateDateColumn({
+        name: 'created_at',
+        type: 'timestamp with time zone',
+        nullable: true,
+    })
+    @ApiProperty({
+        description: 'The creation date of the subregion record',
+        type: 'string',
+        format: 'date-time',
+        nullable: true,
+        example: '2023-01-01T00:00:00Z',
+    })
+    createdAt: Date | null;
+
+    @UpdateDateColumn({
+        name: 'updated_at',
+        type: 'timestamp with time zone',
+        nullable: true,
+    })
+    @ApiProperty({
+        description: 'The last update date of the subregion record',
+        type: 'string',
+        format: 'date-time',
+        nullable: true,
+        example: '2023-01-02T00:00:00Z',
+    })
+    updatedAt: Date | null;
+
+    @Column({
+        type: 'boolean',
+        default: true,
+    })
+    @ApiProperty({
+        description: 'Flag indicating whether the subregion is active',
+        default: true,
+        example: true,
+    })
+    flag: boolean;
+
+    @Column({
+        name: 'wikidataid',
+        type: 'varchar',
+        length: 255,
+        nullable: true,
+    })
+    @ApiProperty({
+        description: 'Wikidata ID of the subregion',
+        maxLength: 255,
+        nullable: true,
+        example: 'Q99',
+    })
+    wikiDataId: string | null;
+
+    /* RELATIONS */
 
     @ManyToOne(() => RegionEntity, (region) => region.subregions)
-    public region: RegionEntity;
-
-    @Column({ type: 'int' })
-    @RelationId((subregion: SubregionEntity) => subregion.region)
-    public regionId: number;
+    @JoinColumn({ name: 'region_id' })
+    region: RegionEntity;
 
     @OneToMany(() => CountryEntity, (country) => country.subregion)
-    public countries: CountryEntity[];
-
-    @Column({ type: 'varchar', name: 'wikidataid' })
-    @ApiProperty({ example: 'Q46' })
-    public wikiDataId: string;
-
-    @CreateDateColumn({ type: 'timestamp with time zone', name: 'created_at' })
-    @ApiProperty({ example: '2021-10-09T10:44:59.011Z' })
-    public createdAt: Date;
-
-    @UpdateDateColumn({ type: 'timestamp with time zone', name: 'updated_at' })
-    @ApiProperty({ example: '2021-10-09T10:44:59.011Z' })
-    public updatedAt: Date;
+    countries: CountryEntity[];
 }
