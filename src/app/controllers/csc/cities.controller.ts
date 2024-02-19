@@ -1,9 +1,10 @@
 import { CityEntity } from '@app/database';
-import { Controller, Get, HttpStatus, Param, ParseIntPipe, Version } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, ParseIntPipe, Query, ValidationPipe, Version } from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
 import { CitiesService } from './cities.service';
+import { CitiesQueryParamsDTO } from './dto';
 
 @ApiTags('csc')
 @Controller('csc/cities')
@@ -19,7 +20,10 @@ export class CitiesController {
     @Version('1')
     @ApiOperation({ summary: 'Get a single city' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: CityEntity })
-    findOne(@Param('cityId', new ParseIntPipe()) cityId: number): Promise<CityEntity> {
-        return this.citiesService.findOne(cityId);
+    findOne(
+        @Param('cityId', new ParseIntPipe()) cityId: number,
+        @Query(new ValidationPipe({ transform: true })) queryParams: CitiesQueryParamsDTO,
+    ): Promise<CityEntity> {
+        return this.citiesService.findOne(cityId, queryParams.fields);
     }
 }

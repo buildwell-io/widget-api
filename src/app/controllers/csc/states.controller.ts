@@ -1,9 +1,10 @@
 import { CityEntity, StateEntity } from '@app/database';
-import { Controller, Get, HttpStatus, Param, ParseIntPipe, Version } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, ParseIntPipe, Query, ValidationPipe, Version } from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
 import { CitiesService } from './cities.service';
+import { StatesQueryParamsDTO } from './dto';
 import { StatesService } from './states.service';
 
 @ApiTags('csc')
@@ -23,15 +24,21 @@ export class StatesController {
     @Version('1')
     @ApiOperation({ summary: 'Get a single state' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: StateEntity })
-    findOne(@Param('stateId', new ParseIntPipe()) stateId: number): Promise<StateEntity> {
-        return this.statesService.findOne(stateId);
+    findOne(
+        @Param('stateId', new ParseIntPipe()) stateId: number,
+        @Query(new ValidationPipe({ transform: true })) queryParams: StatesQueryParamsDTO,
+    ): Promise<StateEntity> {
+        return this.statesService.findOne(stateId, queryParams.fields);
     }
 
     @Get(':stateId/cities')
     @Version('1')
     @ApiOperation({ summary: 'Get a single state cities' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ CityEntity ] })
-    findAllCities(@Param('stateId', new ParseIntPipe()) stateId: number): Promise<CityEntity[]> {
-        return this.citiesService.findAllByState(stateId);
+    findAllCities(
+        @Param('stateId', new ParseIntPipe()) stateId: number,
+        @Query(new ValidationPipe({ transform: true })) queryParams: StatesQueryParamsDTO,
+    ): Promise<CityEntity[]> {
+        return this.citiesService.findAllByState(stateId, queryParams.fields);
     }
 }

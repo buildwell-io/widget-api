@@ -1,7 +1,7 @@
 import { CityEntity } from '@app/database';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsSelect, Repository } from 'typeorm';
 
 @Injectable()
 export class CitiesService {
@@ -10,15 +10,15 @@ export class CitiesService {
         private readonly cityRepository: Repository<CityEntity>,
     ) {}
 
-    findOne(cityId: number): Promise<CityEntity> {
-        return this.cityRepository.findOneBy({ id: cityId });
+    findOne(cityId: number, select?: FindOptionsSelect<CityEntity>): Promise<CityEntity> {
+        return this.cityRepository.findOne({ where: { id: cityId }, select });
     }
 
-    findAllByState(stateId: number): Promise<CityEntity[]> {
-        return this.cityRepository.findBy({ stateId });
+    findAllByState(stateId: number, select?: FindOptionsSelect<CityEntity>): Promise<CityEntity[]> {
+        return this.cityRepository.find({ where: { stateId }, select });
     }
 
-    findAllByCountry(countryId: number): Promise<CityEntity[]> {
-        return this.cityRepository.findBy({ countryId });
+    findAllByCountry(countryId: number, select?: FindOptionsSelect<CityEntity>): Promise<CityEntity[]> {
+        return this.cityRepository.find({ where: { countryId }, select });
     }
 }

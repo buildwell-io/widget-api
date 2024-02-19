@@ -1,7 +1,7 @@
 import { CountryEntity, StateEntity } from '@app/database';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsSelect, Repository } from 'typeorm';
 
 import { StatesService } from './states.service';
 
@@ -13,23 +13,23 @@ export class CountriesService {
         private readonly statesService: StatesService,
     ) {}
 
-    findAll(): Promise<CountryEntity[]> {
-        return this.countryRepository.find();
+    findAll(select?: FindOptionsSelect<CountryEntity>): Promise<CountryEntity[]> {
+        return this.countryRepository.find({ select });
     }
 
-    findOne(countryId: number): Promise<CountryEntity> {
-        return this.countryRepository.findOneBy({ id: countryId });
+    findOne(countryId: number, select?: FindOptionsSelect<CountryEntity>): Promise<CountryEntity> {
+        return this.countryRepository.findOne({ where: { id: countryId }, select });
     }
 
-    findAllStates(countryId: number): Promise<StateEntity[]> {
-        return this.statesService.findAllByCountry(countryId);
+    findAllStates(countryId: number, select?: FindOptionsSelect<StateEntity>): Promise<StateEntity[]> {
+        return this.statesService.findAllByCountry(countryId, select);
     }
 
-    findAllByRegion(regionId: number): Promise<CountryEntity[]> {
-        return this.countryRepository.findBy({ regionId });
+    findAllByRegion(regionId: number, select?: FindOptionsSelect<CountryEntity>): Promise<CountryEntity[]> {
+        return this.countryRepository.find({ where: { regionId }, select });
     }
 
-    findAllBySubregion(subregionId: number): Promise<CountryEntity[]> {
-        return this.countryRepository.findBy({ subregionId });
+    findAllBySubregion(subregionId: number, select?: FindOptionsSelect<CountryEntity>): Promise<CountryEntity[]> {
+        return this.countryRepository.find({ where: { subregionId }, select });
     }
 }
