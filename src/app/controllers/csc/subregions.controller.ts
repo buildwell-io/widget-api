@@ -11,7 +11,7 @@ import {
     ValidationPipe,
     Version,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
 import { CountriesQueryParamsDTO, SubregionsQueryParamsDTO, UpdateSubregionDTO } from './dto';
@@ -30,6 +30,7 @@ export class SubregionsController {
     @Get()
     @Version('1')
     @ApiOperation({ summary: 'Get all subregions' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ SubregionEntity ] })
     findAll(
         @Query(new ValidationPipe({ transform: true })) queryParams: SubregionsQueryParamsDTO,
@@ -40,6 +41,7 @@ export class SubregionsController {
     @Get(':subregionId')
     @Version('1')
     @ApiOperation({ summary: 'Get a single subregion' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: SubregionEntity })
     findOne(
         @Param('subregionId', new ParseIntPipe()) subregionId: number,
@@ -63,6 +65,7 @@ export class SubregionsController {
     @Get(':subregionId/countries')
     @Version('1')
     @ApiOperation({ summary: 'Get all single subregion countries' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ CountryEntity ] })
     findAllCountries(
         @Param('subregionId', new ParseIntPipe()) subregionId: number,

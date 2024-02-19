@@ -11,7 +11,7 @@ import {
     ValidationPipe,
     Version,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
 import { CountriesQueryParamsDTO, RegionsQueryParamsDTO, SubregionsQueryParamsDTO, UpdateRegionDTO } from './dto';
@@ -30,6 +30,7 @@ export class RegionsController {
     @Get()
     @Version('1')
     @ApiOperation({ summary: 'Get all regions' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ RegionEntity ] })
     findAll(
         @Query(new ValidationPipe({ transform: true })) queryParams: RegionsQueryParamsDTO,
@@ -40,6 +41,7 @@ export class RegionsController {
     @Get(':regionId')
     @Version('1')
     @ApiOperation({ summary: 'Get a single region' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: RegionEntity })
     findOne(
         @Param('regionId', new ParseIntPipe()) regionId: number,
@@ -63,6 +65,7 @@ export class RegionsController {
     @Get(':regionId/subregions')
     @Version('1')
     @ApiOperation({ summary: 'Get single region subregions' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ SubregionEntity ] })
     findAllSubregions(
         @Param('regionId', new ParseIntPipe()) regionId: number,
@@ -74,6 +77,7 @@ export class RegionsController {
     @Get(':regionId/countries')
     @Version('1')
     @ApiOperation({ summary: 'Get single region countries' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ CountryEntity ] })
     findAllCountries(
         @Param('regionId', new ParseIntPipe()) regionId: number,

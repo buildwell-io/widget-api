@@ -1,6 +1,6 @@
 import { CityEntity } from '@app/database';
 import { Controller, Get, HttpStatus, Param, ParseIntPipe, Query, ValidationPipe, Version } from '@nestjs/common';
-import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
 import { CitiesService } from './cities.service';
@@ -19,6 +19,7 @@ export class CitiesController {
     @Get(':cityId')
     @Version('1')
     @ApiOperation({ summary: 'Get a single city' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: CityEntity })
     findOne(
         @Param('cityId', new ParseIntPipe()) cityId: number,

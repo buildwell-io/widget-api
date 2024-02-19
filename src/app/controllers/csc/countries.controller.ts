@@ -24,6 +24,7 @@ export class CountriesController {
     @Get()
     @Version('1')
     @ApiOperation({ summary: 'Get all countries' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ CountryEntity ] })
     findAll(
         @Query(new ValidationPipe({ transform: true })) queryParams: CountriesQueryParamsDTO,
@@ -34,6 +35,7 @@ export class CountriesController {
     @Get(':countryId')
     @Version('1')
     @ApiOperation({ summary: 'Get a single country' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: CountryEntity })
     findOne(
         @Param('countryId', new ParseIntPipe()) countryId: number,
@@ -45,6 +47,7 @@ export class CountriesController {
     @Get(':countryId/states')
     @Version('1')
     @ApiOperation({ summary: 'Get all single country states' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ StateEntity ] })
     findAllStates(
         @Param('countryId', new ParseIntPipe()) countryId: number,
@@ -56,6 +59,7 @@ export class CountriesController {
     @Get(':countryId/cities')
     @Version('1')
     @ApiOperation({ summary: 'Get all single country cities' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ CityEntity ] })
     findAllCities(
         @Param('countryId', new ParseIntPipe()) countryId: number,

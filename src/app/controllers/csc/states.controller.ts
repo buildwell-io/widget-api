@@ -1,6 +1,6 @@
 import { CityEntity, StateEntity } from '@app/database';
 import { Controller, Get, HttpStatus, Param, ParseIntPipe, Query, ValidationPipe, Version } from '@nestjs/common';
-import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
 import { CitiesService } from './cities.service';
@@ -23,6 +23,7 @@ export class StatesController {
     @Get(':stateId')
     @Version('1')
     @ApiOperation({ summary: 'Get a single state' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: StateEntity })
     findOne(
         @Param('stateId', new ParseIntPipe()) stateId: number,
@@ -34,6 +35,7 @@ export class StatesController {
     @Get(':stateId/cities')
     @Version('1')
     @ApiOperation({ summary: 'Get a single state cities' })
+    @ApiQuery({ name: 'fields', type: 'string[]', required: false, example: 'id,name' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ CityEntity ] })
     findAllCities(
         @Param('stateId', new ParseIntPipe()) stateId: number,
