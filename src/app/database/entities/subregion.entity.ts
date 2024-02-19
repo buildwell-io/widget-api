@@ -46,7 +46,7 @@ export class SubregionEntity {
         type: 'string',
         example: { 'fr': 'Californie' },
     })
-    translations: string | null; // key is `rfc5646`
+    translations: Record<string, string> | null; // key is `rfc5646`
 
     @Column({
         type: 'int',

@@ -1,9 +1,20 @@
 import { CountryEntity, RegionEntity, SubregionEntity } from '@app/database';
-import { Controller, Get, HttpStatus, Param, ParseIntPipe, Query, ValidationPipe, Version } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Query,
+    ValidationPipe,
+    Version,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
-import { CountriesQueryParamsDTO, RegionsQueryParamsDTO, SubregionsQueryParamsDTO } from './dto';
+import { CountriesQueryParamsDTO, RegionsQueryParamsDTO, SubregionsQueryParamsDTO, UpdateRegionDTO } from './dto';
 import { RegionsService } from './regions.service';
 
 @ApiTags('csc')
@@ -35,6 +46,17 @@ export class RegionsController {
         @Query(new ValidationPipe({ transform: true })) queryParams: RegionsQueryParamsDTO,
     ): Promise<RegionEntity> {
         return this.regionService.findOne(regionId, queryParams.fields);
+    }
+
+    @Patch(':regionId')
+    @Version('1')
+    @ApiOperation({ summary: 'Update a region' })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: RegionEntity })
+    updateOne(
+        @Param('regionId', new ParseIntPipe()) regionId: number,
+        @Body() payload: UpdateRegionDTO,
+    ): Promise<RegionEntity> {
+        return this.regionService.updateOne(regionId, payload);
     }
 
     @Get(':regionId/subregions')

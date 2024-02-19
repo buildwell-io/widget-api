@@ -39,7 +39,7 @@ export class RegionEntity {
         type: 'string',
         example: { 'fr': 'Amérique du Nord' },
     })
-    translations: string | null; // key is `rfc5646`
+    translations: Record<string, string> | null; // key is `rfc5646`
 
     @CreateDateColumn({
         name: 'created_at',
