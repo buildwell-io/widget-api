@@ -1,9 +1,20 @@
 import { CountryEntity, SubregionEntity } from '@app/database';
-import { Controller, Get, HttpStatus, Param, ParseIntPipe, Query, ValidationPipe, Version } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Query,
+    ValidationPipe,
+    Version,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
-import { CountriesQueryParamsDTO, SubregionsQueryParamsDTO } from './dto';
+import { CountriesQueryParamsDTO, SubregionsQueryParamsDTO, UpdateSubregionDTO } from './dto';
 import { SubregionsService } from './subregions.service';
 
 @ApiTags('csc')
@@ -35,6 +46,18 @@ export class SubregionsController {
         @Query(new ValidationPipe({ transform: true })) queryParams: SubregionsQueryParamsDTO,
     ): Promise<SubregionEntity> {
         return this.subregionsService.findOne(subregionId, queryParams.fields);
+    }
+
+    @Patch(':subregionId')
+    @Version('1')
+    @ApiOperation({ summary: 'Update a subregion' })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: SubregionEntity })
+    @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
+    updateOne(
+        @Param('subregionId', new ParseIntPipe()) subregionId: number,
+        @Body() payload: UpdateSubregionDTO,
+    ): Promise<SubregionEntity> {
+        return this.subregionsService.updateOne(subregionId, payload);
     }
 
     @Get(':subregionId/countries')

@@ -52,6 +52,7 @@ export class RegionsController {
     @Version('1')
     @ApiOperation({ summary: 'Update a region' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: RegionEntity })
+    @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     updateOne(
         @Param('regionId', new ParseIntPipe()) regionId: number,
         @Body() payload: UpdateRegionDTO,

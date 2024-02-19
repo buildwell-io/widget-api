@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsSelect, Repository } from 'typeorm';
 
 import { CountriesService } from './countries.service';
+import { UpdateSubregionDTO } from './dto';
 
 @Injectable()
 export class SubregionsService {
@@ -19,6 +20,10 @@ export class SubregionsService {
 
     findOne(subregionId: number, select?: FindOptionsSelect<SubregionEntity>): Promise<SubregionEntity> {
         return this.subregionRepository.findOne({ where: { id: subregionId }, select });
+    }
+
+    updateOne(subregionId: number, payload: UpdateSubregionDTO): Promise<SubregionEntity> {
+        return this.subregionRepository.save({ id: subregionId, ...payload });
     }
 
     findAllCountries(subregionId: number, select?: FindOptionsSelect<CountryEntity>): Promise<CountryEntity[]> {
