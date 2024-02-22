@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsSelect, Repository } from 'typeorm';
 
+import { UpdateStateDTO } from './dto';
+
 @Injectable()
 export class StatesService {
     constructor(
@@ -12,6 +14,10 @@ export class StatesService {
 
     findOne(stateId: number, select?: FindOptionsSelect<StateEntity>): Promise<StateEntity> {
         return this.stateRepository.findOne({ where: { id: stateId }, select });
+    }
+
+    updateOne(regionId: number, payload: UpdateStateDTO): Promise<StateEntity> {
+        return this.stateRepository.save({ id: regionId, ...payload });
     }
 
     findAllByCountry(countryId: number, select?: FindOptionsSelect<StateEntity>): Promise<StateEntity[]> {

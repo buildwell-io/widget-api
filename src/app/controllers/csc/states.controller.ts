@@ -1,10 +1,21 @@
 import { CityEntity, StateEntity } from '@app/database';
-import { Controller, Get, HttpStatus, Param, ParseIntPipe, Query, ValidationPipe, Version } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Query,
+    ValidationPipe,
+    Version,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
 import { CitiesService } from './cities.service';
-import { StatesQueryParamsDTO } from './dto';
+import { StatesQueryParamsDTO, UpdateStateDTO } from './dto';
 import { StatesService } from './states.service';
 
 @ApiTags('csc')
@@ -30,6 +41,18 @@ export class StatesController {
         @Query(new ValidationPipe({ transform: true })) queryParams: StatesQueryParamsDTO,
     ): Promise<StateEntity> {
         return this.statesService.findOne(stateId, queryParams.fields);
+    }
+
+    @Patch(':stateId')
+    @Version('1')
+    @ApiOperation({ summary: 'Update a state' })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: StateEntity })
+    @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
+    updateOne(
+        @Param('stateId', new ParseIntPipe()) regionId: number,
+        @Body() payload: UpdateStateDTO,
+    ): Promise<StateEntity> {
+        return this.statesService.updateOne(regionId, payload);
     }
 
     @Get(':stateId/cities')
