@@ -49,10 +49,10 @@ export class StatesController {
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: StateEntity })
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     updateOne(
-        @Param('stateId', new ParseIntPipe()) regionId: number,
+        @Param('stateId', new ParseIntPipe()) stateId: number,
         @Body() payload: UpdateStateDTO,
     ): Promise<StateEntity> {
-        return this.statesService.updateOne(regionId, payload);
+        return this.statesService.updateOne(stateId, payload);
     }
 
     @Get(':stateId/cities')

@@ -1,10 +1,21 @@
 import { CityEntity } from '@app/database';
-import { Controller, Get, HttpStatus, Param, ParseIntPipe, Query, ValidationPipe, Version } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Get,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Query,
+    ValidationPipe,
+    Version,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 
 import { CitiesService } from './cities.service';
-import { CitiesQueryParamsDTO } from './dto';
+import { CitiesQueryParamsDTO, UpdateCitiesDTO } from './dto';
 
 @ApiTags('csc')
 @Controller('csc/cities')
@@ -26,5 +37,17 @@ export class CitiesController {
         @Query(new ValidationPipe({ transform: true })) queryParams: CitiesQueryParamsDTO,
     ): Promise<CityEntity> {
         return this.citiesService.findOne(cityId, queryParams.fields);
+    }
+
+    @Patch(':cityId')
+    @Version('1')
+    @ApiOperation({ summary: 'Update a city' })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: CityEntity })
+    @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
+    updateOne(
+        @Param('cityId', new ParseIntPipe()) cityId: number,
+        @Body() payload: UpdateCitiesDTO,
+    ): Promise<CityEntity> {
+        return this.citiesService.updateOne(cityId, payload);
     }
 }

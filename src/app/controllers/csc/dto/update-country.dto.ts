@@ -28,7 +28,7 @@ export class UpdateCountryDTO {
     })
     readonly name: string;
 
-    @Length(3)
+    @Length(3, 3)
     @IsString()
     @IsOptional()
     @ApiProperty({
@@ -39,7 +39,7 @@ export class UpdateCountryDTO {
     })
     readonly iso3: string | null;
 
-    @Length(3)
+    @Length(3, 3)
     @IsString()
     @IsOptional()
     @ApiProperty({
@@ -50,7 +50,7 @@ export class UpdateCountryDTO {
     })
     readonly numericCode: string | null;
 
-    @Length(2)
+    @Length(2, 2)
     @IsString()
     @IsOptional()
     @ApiProperty({
