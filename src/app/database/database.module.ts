@@ -2,14 +2,17 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as fs from 'fs';
+import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 import { AccountEntity, ConfirmationEntity, WidgetEntity } from './entities';
 
 @Module({
     imports: [
+        /* PostgreSQL */
         TypeOrmModule.forRootAsync({
             imports: [ ConfigModule ],
-            useFactory: (configService: ConfigService) => {
+            useFactory: (configService: ConfigService): PostgresConnectionOptions => {
                 const POSTGRES_CERT_PATH = configService.get('POSTGRES_CERT_PATH');
 
                 const ssl = POSTGRES_CERT_PATH
@@ -18,7 +21,7 @@ import { AccountEntity, ConfirmationEntity, WidgetEntity } from './entities';
 
                 return {
                     type: 'postgres',
-                    applicationName: 'db-postgresql-ams3-88358',
+                    applicationName: 'db-postgresql',
                     host: configService.get('POSTGRES_HOST'),
                     port: configService.get('POSTGRES_PORT'),
                     database: configService.get('POSTGRES_DATABASE'),
@@ -27,6 +30,24 @@ import { AccountEntity, ConfirmationEntity, WidgetEntity } from './entities';
                     ssl,
                     entities: [ AccountEntity, ConfirmationEntity, WidgetEntity ],
                     synchronize: false,
+                };
+            },
+            inject: [ ConfigService ],
+        }),
+
+        /* MongoDB */
+        TypeOrmModule.forRootAsync({
+            imports: [ ConfigModule ],
+            useFactory: (configService: ConfigService): MongoConnectionOptions => {
+                return {
+                    type: 'mongodb',
+                    appname: 'db-mongodb',
+                    url: configService.get('MONGO_URL'),
+                    database: configService.get('MONGO_DATABASE'),
+                    entities: [],
+                    synchronize: false,
+                    useUnifiedTopology: true,
+                    useNewUrlParser: true,
                 };
             },
             inject: [ ConfigService ],
