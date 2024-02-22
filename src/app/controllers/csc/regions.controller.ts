@@ -1,4 +1,6 @@
 import { CountryEntity, RegionEntity, SubregionEntity } from '@app/database';
+import { Roles } from '@app/decorators';
+import { AccountRole } from '@app/enums';
 import {
     Body,
     Controller,
@@ -52,6 +54,7 @@ export class RegionsController {
 
     @Patch(':regionId')
     @Version('1')
+    @Roles(AccountRole.Admin)
     @ApiOperation({ summary: 'Update a region' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: RegionEntity })
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
