@@ -2,7 +2,7 @@ import { CustomConfigModule } from '@app/config';
 import {
     AccountModule,
     AuthenticationModule,
-    ConfirmationModule,
+    ConfirmationModule, CSCModule,
     WidgetAppModule,
     WidgetModule,
 } from '@app/controllers';
@@ -39,6 +39,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         CustomConfigModule,
         CustomThrottlerModule,
         DatabaseModule,
+        CSCModule,
         AccountModule,
         AuthenticationModule,
         ConfirmationModule,
