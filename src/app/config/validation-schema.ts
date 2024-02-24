@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 export const validationSchema = Joi.object({
     PORT: Joi.number(),
-    NODE_ENV: Joi.string().valid('development', 'production').default('development'),
+    NODE_ENV: Joi.string().valid('development', 'production'),
     POSTGRES_HOST: Joi.string(),
     POSTGRES_PORT: Joi.number(),
     POSTGRES_DATABASE: Joi.string(),
@@ -18,5 +18,5 @@ export const validationSchema = Joi.object({
     THROTTLE_LIMIT: Joi.number(),
     SENDGRID_API_KEY: Joi.string(),
     STRIPE_API_KEY: Joi.string(),
-    // FALLBACK_LANGUAGE: Joi.string().valid('en', 'uk', 'ru').default('en'),
+    STRIPE_API_VERSION: Joi.string(),
 });

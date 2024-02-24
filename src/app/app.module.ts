@@ -2,7 +2,8 @@ import { CustomConfigModule } from '@app/config';
 import {
     AccountModule,
     AuthenticationModule,
-    ConfirmationModule, CSCModule,
+    ConfirmationModule,
+    CSCModule,
     WidgetAppModule,
     WidgetModule,
 } from '@app/controllers';
@@ -26,9 +27,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         StripeModule.forRootAsync({
             inject: [ ConfigService ],
             useFactory: (configService: ConfigService) => ({
-                apiKey: configService.get<string>('STRIPE_API_KEY'),
+                apiKey: configService.get('STRIPE_API_KEY'),
                 options: {
-                    apiVersion: '2023-10-16',
+                    apiVersion: configService.get('STRIPE_API_VERSION'),
                     typescript: true,
                     telemetry: true,
                 },
