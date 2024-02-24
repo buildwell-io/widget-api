@@ -10,7 +10,6 @@ export const validationSchema = Joi.object({
     POSTGRES_PASSWORD: Joi.string(),
     POSTGRES_CERT_PATH: Joi.string().optional(),
     MONGO_URL: Joi.string(),
-    MONGO_DATABASE: Joi.string(),
     JWT_ACCESS_SECRET: Joi.string(),
     JWT_ACCESS_EXPIRE: Joi.string(),
     JWT_REFRESH_SECRET: Joi.string(),

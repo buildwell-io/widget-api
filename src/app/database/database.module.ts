@@ -61,7 +61,6 @@ import {
                     type: 'mongodb',
                     appname: 'db-mongodb',
                     url: configService.get('MONGO_URL'),
-                    database: configService.get('MONGO_DATABASE'),
                     entities: [],
                     synchronize: false,
                     useUnifiedTopology: true,
