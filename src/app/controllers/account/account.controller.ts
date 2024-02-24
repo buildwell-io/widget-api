@@ -1,19 +1,16 @@
 import { AccountEntity } from '@app/database';
 import { Body, Controller, Get, HttpStatus, Patch, Req, Version } from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Throttle } from '@nestjs/throttler';
 
 import { AccountService } from './account.service';
 import { ChangePasswordDTO, UpdateDTO } from './dto';
 
 @ApiTags('account')
 @Controller('account')
-@Throttle({ default: { limit: 16, ttl: 60_000 } })
 @ApiBearerAuth()
 @ApiHeader({ name: 'Authorization', required: true, description: 'Bearer <access_token>' })
 @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
 @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Account not found' })
-@ApiResponse({ status: HttpStatus.TOO_MANY_REQUESTS, description: 'Too many requests (16/min)' })
 export class AccountController {
     constructor(private readonly accountService: AccountService) {}
 

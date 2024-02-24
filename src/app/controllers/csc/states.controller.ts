@@ -14,7 +14,6 @@ import {
     Version,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Throttle } from '@nestjs/throttler';
 
 import { CitiesService } from './cities.service';
 import { StatesQueryParamsDTO, UpdateStateDTO } from './dto';
@@ -22,11 +21,9 @@ import { StatesService } from './states.service';
 
 @ApiTags('csc')
 @Controller('csc/states')
-@Throttle({ default: { limit: 16, ttl: 60_000 } })
 @ApiBearerAuth()
 @ApiHeader({ name: 'Authorization', required: true, description: 'Bearer <access_token>' })
 @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
-@ApiResponse({ status: HttpStatus.TOO_MANY_REQUESTS, description: 'Too many requests (16/min)' })
 export class StatesController {
     constructor(
         private readonly statesService: StatesService,

@@ -8,17 +8,13 @@ import {
     ApiOperation,
     ApiResponse,
     ApiTags,
-    ApiTooManyRequestsResponse,
 } from '@nestjs/swagger';
-import { Throttle } from '@nestjs/throttler';
 
 import { AuthenticationService } from './authentication.service';
 import { SignInDTO, SignUpDTO } from './dto';
 
 @ApiTags('authentication')
 @Controller('authentication')
-@Throttle({ default: { limit: 3, ttl: 60_000 } })
-@ApiTooManyRequestsResponse({ description: 'Too many requests (3/min)' })
 export class AuthenticationController {
     constructor(private readonly authenticationService: AuthenticationService) {}
 

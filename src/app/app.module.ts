@@ -15,7 +15,6 @@ import {
 } from '@app/providers';
 import { AppConfirmationService, AppMailService, StripeModule } from '@app/services';
 import { AccessTokenStrategy, RefreshTokenStrategy } from '@app/strategies';
-import { CustomThrottlerModule } from '@app/throttle';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -37,7 +36,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         }),
         ScheduleModule.forRoot(),
         CustomConfigModule,
-        CustomThrottlerModule,
         DatabaseModule,
         CSCModule,
         AccountModule,

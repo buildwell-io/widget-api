@@ -30,7 +30,6 @@
       "@app/services": [ "src/app/services/index" ],
       "@app/strategies": [ "src/app/strategies/index" ],
       "@app/swagger": [ "src/app/swagger/index" ],
-      "@app/throttle": [ "src/app/throttle/index" ],
       "@app/utilities": [ "src/app/utilities/index" ]
     },
     "esModuleInterop": true

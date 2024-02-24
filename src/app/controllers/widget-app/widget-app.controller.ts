@@ -1,15 +1,12 @@
 import { Public } from '@app/decorators';
 import { Controller, Get, HttpStatus, ParseUUIDPipe, Query, Version } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Throttle } from '@nestjs/throttler';
 
 import { WidgetAppService } from './widget-app.service';
 
 @ApiTags('widget-app')
 @Controller('widget-app')
-@Throttle({ default: { limit: 3, ttl: 60_000 } })
 @Public()
-@ApiResponse({ status: HttpStatus.TOO_MANY_REQUESTS, description: 'Too many requests (3/min)' })
 export class WidgetAppController {
     constructor(private readonly widgetAppService: WidgetAppService) {}
 
