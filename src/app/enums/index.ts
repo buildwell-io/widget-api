@@ -1,2 +1,2 @@
-export * from './account-role.enum';
+export * from './account-type.enum';
 export * from './confirmation-action.enum';

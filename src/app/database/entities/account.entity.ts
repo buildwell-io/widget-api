@@ -1,4 +1,4 @@
-import { AccountRole } from '@app/enums';
+import { AccountType } from '@app/enums';
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
@@ -9,51 +9,76 @@ import { WidgetEntity } from './widget.entity';
 @Entity('accounts')
 export class AccountEntity {
     @PrimaryGeneratedColumn()
-    @ApiProperty({ example: 1337 })
-    public id: number;
+    @ApiProperty({ example: 1 })
+    id: number;
 
-    @Column({ type: 'varchar' })
+    @Column({
+        type: 'varchar',
+        length: 128,
+    })
     @ApiProperty({ example: 'John Doe / Alphabet Inc.' })
-    public name: string;
+    name: string;
 
-    @Column({ type: 'varchar' })
+    @Column({
+        type: 'varchar',
+        length: 255,
+        unique: true,
+    })
     @ApiProperty({ example: 'john.doe@gmail.com' })
-    public email: string;
+    email: string;
 
-    @Column({ type: 'enum', enum: [ AccountRole.User, AccountRole.Admin ] })
-    @ApiProperty({ example: AccountRole.User })
-    public role: AccountRole;
+    @Column({
+        type: 'enum',
+        enum: AccountType,
+        default: AccountType.Client,
+    })
+    @ApiProperty({ example: AccountType.Client })
+    type: AccountType;
 
-    @Column({ type: 'boolean' })
-    public hasConfirmedEmail: boolean;
+    @Column({
+        name: 'has_confirmed_email',
+        type: 'boolean',
+        default: false,
+    })
+    hasConfirmedEmail: boolean;
 
-    @Column({ type: 'varchar' })
+    @Column({
+        type: 'varchar',
+        length: 64,
+    })
     @Exclude()
     @ApiHideProperty()
-    public password: string;
+    password: string;
 
-    @Column({ type: 'varchar' })
+    @Column({
+        name: 'refresh_token',
+        type: 'varchar',
+        length: 64,
+        nullable: true,
+    })
     @Exclude()
     @ApiHideProperty()
-    public refreshToken: string | null;
+    refreshToken: string | null;
 
-    @CreateDateColumn({ type: 'timestamp with time zone' })
+    @CreateDateColumn({
+        name: 'created_at',
+        type: 'timestamp with time zone',
+    })
     @ApiProperty({ example: '2021-10-09T10:44:59.011Z' })
-    public createdAt: Date;
+    createdAt: Date;
 
-    @UpdateDateColumn({ type: 'timestamp with time zone' })
+    @UpdateDateColumn({
+        name: 'updated_at',
+        type: 'timestamp with time zone',
+    })
     @ApiProperty({ example: '2021-10-09T10:44:59.011Z' })
-    public updatedAt: Date;
+    updatedAt: Date;
+
+    /* RELATIONS */
 
     @OneToMany(() => WidgetEntity, (widget) => widget.owner)
-    public widgets: WidgetEntity[];
-
-    /*@RelationId((account: Account) => account.widgets)
-    public widgetIds: number[];*/
+    widgets: WidgetEntity[];
 
     @OneToMany(() => ConfirmationEntity, (confirmation) => confirmation.account)
-    public confirmations: ConfirmationEntity[];
-
-    /*@RelationId((account: Account) => account.confirmations)
-    public confirmationIds: number[];*/
+    confirmations: ConfirmationEntity[];
 }

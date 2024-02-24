@@ -1,6 +1,6 @@
-import { CityEntity, CountryEntity, RegionEntity, StateEntity } from '@app/database';
-import { Roles } from '@app/decorators';
-import { AccountRole } from '@app/enums';
+import { CityEntity, CountryEntity, StateEntity } from '@app/database';
+import { AccountType } from '@app/decorators';
+import { AccountType as AccountTypeEnum } from '@app/enums';
 import {
     Body,
     Controller,
@@ -18,7 +18,7 @@ import { Throttle } from '@nestjs/throttler';
 
 import { CitiesService } from './cities.service';
 import { CountriesService } from './countries.service';
-import { CitiesQueryParamsDTO, CountriesQueryParamsDTO, UpdateCountryDTO, UpdateRegionDTO } from './dto';
+import { CitiesQueryParamsDTO, CountriesQueryParamsDTO, UpdateCountryDTO } from './dto';
 
 @ApiTags('csc')
 @Controller('csc/countries')
@@ -58,7 +58,7 @@ export class CountriesController {
 
     @Patch(':countryId')
     @Version('1')
-    @Roles(AccountRole.Admin)
+    @AccountType(AccountTypeEnum.Admin)
     @ApiOperation({ summary: 'Update a country' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: CountryEntity })
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })

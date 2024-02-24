@@ -1,7 +1,7 @@
 import { ConfirmationAction } from '@app/enums';
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, RelationId } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { AccountEntity } from './account.entity';
 
@@ -10,39 +10,54 @@ export class ConfirmationEntity implements ConfirmationEntity {
     @PrimaryGeneratedColumn()
     @Exclude()
     @ApiHideProperty()
-    public id: number;
+    id: number;
 
-    @ManyToOne(() => AccountEntity, (account) => account.confirmations)
+    @Column({
+        name: 'account_id',
+        type: 'int',
+    })
     @Exclude()
     @ApiHideProperty()
-    public account: AccountEntity;
+    accountId: number;
 
-    @Column({ type: 'int' })
-    @RelationId((confirmation: ConfirmationEntity) => confirmation.account)
-    @Exclude()
-    @ApiHideProperty()
-    public accountId: number;
-
-    @Column({ type: 'enum', enum: [ ConfirmationAction.EmailConfirm, ConfirmationAction.PasswordChange ] })
+    @Column({
+        type: 'enum',
+        enum: ConfirmationAction.EmailConfirm,
+    })
     @ApiProperty({ example: ConfirmationAction.EmailConfirm })
-    public action: ConfirmationAction;
+    action: ConfirmationAction;
 
     @Column({ type: 'uuid' })
     @Exclude()
     @ApiHideProperty()
-    public token: string; // uuid4
+    token: string; // uuid4
 
-    @CreateDateColumn({ type: 'timestamp with time zone' })
+    @CreateDateColumn({
+        name: 'created_at',
+        type: 'timestamp with time zone',
+    })
     @Exclude()
     @ApiHideProperty()
-    public createdAt: Date;
+    createdAt: Date;
 
-    @Column({ type: 'timestamp with time zone' })
+    @Column({
+        name: 'confirmed_at',
+        type: 'timestamp with time zone',
+    })
     @Exclude()
     @ApiHideProperty()
-    public confirmedAt: Date;
+    confirmedAt: Date;
 
-    @Column({ type: 'timestamp with time zone' })
+    @Column({
+        name: 'expires_at',
+        type: 'timestamp with time zone',
+    })
     @ApiProperty({ example: '2021-10-09T10:44:59.011Z' })
-    public expiresAt: Date;
+    expiresAt: Date;
+
+    /* RELATIONS */
+
+    @ManyToOne(() => AccountEntity, (account) => account.confirmations)
+    @JoinColumn({ name: 'account_id' })
+    account: AccountEntity;
 }

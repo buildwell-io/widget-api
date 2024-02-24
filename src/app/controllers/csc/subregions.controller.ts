@@ -1,6 +1,6 @@
 import { CountryEntity, SubregionEntity } from '@app/database';
-import { Roles } from '@app/decorators';
-import { AccountRole } from '@app/enums';
+import { AccountType } from '@app/decorators';
+import { AccountType as AccountTypeEnum } from '@app/enums';
 import {
     Body,
     Controller,
@@ -54,7 +54,7 @@ export class SubregionsController {
 
     @Patch(':subregionId')
     @Version('1')
-    @Roles(AccountRole.Admin)
+    @AccountType(AccountTypeEnum.Admin)
     @ApiOperation({ summary: 'Update a subregion' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: SubregionEntity })
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })

@@ -1,4 +1,4 @@
-import { AccessTokenGuard, RoleGuard } from '@app/guards';
+import { AccessTokenGuard, AccountTypeGuard } from '@app/guards';
 import { Provider } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
@@ -15,7 +15,7 @@ export function provideGlobalGuards(): Provider[] {
         },
         {
             provide: APP_GUARD,
-            useClass: RoleGuard,
+            useClass: AccountTypeGuard,
         },
     ];
 }

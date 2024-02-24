@@ -6,7 +6,7 @@ declare global {
     * adds it to `Request` interface. We just extend that `User` interface
     * */
     namespace Express {
-        interface User extends Pick<Account, 'id' | 'role' | 'refreshToken'> {
+        interface User extends Pick<Account, 'id' | 'type'> {
             refreshToken?: string;
         }
     }

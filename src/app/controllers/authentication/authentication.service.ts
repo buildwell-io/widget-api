@@ -64,8 +64,8 @@ export class AuthenticationService {
         return Promise.resolve();
     }
 
-    private getPayload({ id, role }: AccountEntity): Express.User {
-        return { id, role };
+    private getPayload({ id, type }: AccountEntity): Express.User {
+        return { id, type };
     }
 
     private async signTokensAndUpdateUser(account: AccountEntity): Promise<AuthResponse> {

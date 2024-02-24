@@ -4,9 +4,9 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    JoinColumn,
     ManyToOne,
     PrimaryGeneratedColumn,
-    RelationId,
     UpdateDateColumn,
 } from 'typeorm';
 
@@ -15,34 +15,46 @@ import { AccountEntity } from './account.entity';
 @Entity('widgets')
 export class WidgetEntity {
     @PrimaryGeneratedColumn()
-    @ApiProperty({ example: 1337 })
-    public id: number;
+    @ApiProperty({ example: 1 })
+    id: number;
 
-    @Column({ type: 'varchar' })
+    @Column({
+        type: 'varchar',
+        length: 128,
+    })
     @ApiProperty({ example: 'My widget' })
-    public name: string;
+    name: string;
 
-    @ManyToOne(() => AccountEntity, (account) => account.widgets)
+    @Column({
+        name: 'owner_id',
+        type: 'int',
+    })
     @Exclude()
     @ApiHideProperty()
-    public owner: AccountEntity;
-
-    @Column({ type: 'int' })
-    @RelationId((widget: WidgetEntity) => widget.owner)
-    @Exclude()
-    @ApiHideProperty()
-    public ownerId: number;
+    ownerId: number;
 
     @Column({ type: 'uuid' })
     @Exclude()
     @ApiHideProperty()
-    public key: string; // uuid4
+    key: string; // uuid4
 
-    @CreateDateColumn({ type: 'timestamp with time zone' })
+    @CreateDateColumn({
+        name: 'created_at',
+        type: 'timestamp with time zone',
+    })
     @ApiProperty({ example: '2021-10-09T10:44:59.011Z' })
-    public createdAt: Date;
+    createdAt: Date;
 
-    @UpdateDateColumn({ type: 'timestamp with time zone' })
+    @UpdateDateColumn({
+        name: 'updated_at',
+        type: 'timestamp with time zone',
+    })
     @ApiProperty({ example: '2021-10-09T10:44:59.011Z' })
-    public updatedAt: Date;
+    updatedAt: Date;
+
+    /* RELATIONS */
+
+    @ManyToOne(() => AccountEntity, (account) => account.widgets)
+    @JoinColumn({ name: 'owner_id' })
+    owner: AccountEntity;
 }
