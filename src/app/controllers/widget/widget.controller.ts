@@ -1,5 +1,6 @@
 import { WidgetEntity } from '@app/database';
-import { ApiPaginatedResponse, Pagination } from '@app/decorators';
+import { AccountType, ApiPaginatedResponse, Pagination } from '@app/decorators';
+import { AccountType as AccountTypeEnum } from '@app/enums';
 import { Paginated, PaginationRequest } from '@app/interfaces';
 import {
     Body,
@@ -21,6 +22,7 @@ import { WidgetService } from './widget.service';
 
 @ApiTags('widget')
 @Controller('widget')
+@AccountType(AccountTypeEnum.Company, AccountTypeEnum.CompanyMember)
 @ApiBearerAuth()
 @ApiHeader({ name: 'Authorization', required: true, description: 'Bearer <access_token>' })
 @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })

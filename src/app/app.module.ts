@@ -1,7 +1,7 @@
 import { CustomConfigModule } from '@app/config';
 import {
     AccountModule,
-    AuthenticationModule,
+    AuthenticationModule, CompanyModule,
     ConfirmationModule,
     CSCModule,
     WidgetAppModule,
@@ -44,6 +44,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         ConfirmationModule,
         WidgetModule,
         WidgetAppModule,
+        CompanyModule,
     ],
     providers: [
         AppMailService,

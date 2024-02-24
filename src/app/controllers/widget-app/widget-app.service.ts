@@ -11,7 +11,7 @@ export class WidgetAppService {
         private readonly widgetRepository: Repository<WidgetEntity>,
     ) {}
 
-    async verify(key: string/*, referrer: string*/) {
+    async verify(key: string, referrer: string) {
         const widgetExists = await this.widgetRepository.existsBy({ key });
         assert(widgetExists, () => new BadRequestException());
     }
