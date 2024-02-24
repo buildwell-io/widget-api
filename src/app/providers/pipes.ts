@@ -5,7 +5,18 @@ export function provideGlobalPipes(): Provider[] {
     return [
         {
             provide: APP_PIPE,
-            useClass: ValidationPipe,
+            useFactory: () => {
+                return new ValidationPipe({
+                    disableErrorMessages: true,
+                    stopAtFirstError: true,
+                    transform: true,
+                    whitelist: true,
+                    forbidNonWhitelisted: true,
+                    transformOptions: {
+                        enableImplicitConversion: true,
+                    },
+                });
+            },
         },
     ];
 }
