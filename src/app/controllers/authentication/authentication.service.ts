@@ -6,7 +6,6 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import ms from 'ms';
 import { Repository } from 'typeorm';
 
 import { SignInDTO, SignUpDTO } from './dto';
@@ -69,35 +68,27 @@ export class AuthenticationService {
     }
 
     private async signTokensAndUpdateUser(account: AccountEntity): Promise<AuthResponse> {
-        const { access, refresh } = await this.signTokens(this.getPayload(account));
-        account.refreshToken = await bcrypt.hash(refresh.token, 10);
+        const { accessToken, refreshToken } = await this.signTokens(this.getPayload(account));
+        account.refreshToken = await bcrypt.hash(refreshToken, 10);
         await this.accountRepository.save(account);
-        return { access, refresh };
+        return { accessToken, refreshToken };
     }
 
     private async signTokens(user: Express.User): Promise<AuthResponse> {
-        const access = await this.signAccessToken(user);
-        const refresh = await this.signRefreshToken(user);
-        return { access, refresh };
+        const accessToken = await this.signAccessToken(user);
+        const refreshToken = await this.signRefreshToken(user);
+        return { accessToken, refreshToken };
     }
 
-    private async signAccessToken(user: Express.User): Promise<AuthResponse['access']> {
+    private async signAccessToken(user: Express.User): Promise<string> {
         const secret = this.configService.get('JWT_ACCESS_SECRET');
         const expiresIn = this.configService.get('JWT_ACCESS_EXPIRE');
-
-        const token = await this.jwtService.signAsync(user, { secret, expiresIn });
-        const expiresAt = Date.now() + Number(ms(expiresIn));
-
-        return { token, expiresAt };
+        return this.jwtService.signAsync(user, { secret, expiresIn });
     }
 
-    private async signRefreshToken(user: Express.User): Promise<AuthResponse['refresh']> {
+    private async signRefreshToken(user: Express.User): Promise<string> {
         const secret = this.configService.get('JWT_REFRESH_SECRET');
         const expiresIn = this.configService.get('JWT_REFRESH_EXPIRE');
-
-        const token = await this.jwtService.signAsync(user, { secret, expiresIn });
-        const expiresAt = Date.now() + Number(ms(expiresIn));
-
-        return { token, expiresAt };
+        return this.jwtService.signAsync(user, { secret, expiresIn });
     }
 }
