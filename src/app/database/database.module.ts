@@ -1,3 +1,4 @@
+import { DBConnectionName } from '@app/enums';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -21,6 +22,7 @@ import {
         /* PostgreSQL */
         TypeOrmModule.forRootAsync({
             imports: [ ConfigModule ],
+            name: DBConnectionName.PostgresSQL,
             useFactory: (configService: ConfigService): PostgresConnectionOptions => {
                 const POSTGRES_CERT_PATH = configService.get('POSTGRES_CERT_PATH');
 
@@ -56,6 +58,7 @@ import {
         /* MongoDB */
         TypeOrmModule.forRootAsync({
             imports: [ ConfigModule ],
+            name: DBConnectionName.MongoDB,
             useFactory: (configService: ConfigService): MongoConnectionOptions => {
                 return {
                     type: 'mongodb',

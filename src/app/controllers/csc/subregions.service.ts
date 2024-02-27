@@ -1,4 +1,5 @@
 import { CountryEntity, SubregionEntity } from '@app/database';
+import { DBConnectionName } from '@app/enums';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsSelect, Repository } from 'typeorm';
@@ -9,7 +10,7 @@ import { UpdateSubregionDTO } from './dto';
 @Injectable()
 export class SubregionsService {
     constructor(
-        @InjectRepository(SubregionEntity)
+        @InjectRepository(SubregionEntity, DBConnectionName.PostgresSQL)
         private readonly subregionRepository: Repository<SubregionEntity>,
         private readonly countriesService: CountriesService,
     ) {}

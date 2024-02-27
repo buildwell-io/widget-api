@@ -1,4 +1,5 @@
 import { StateEntity } from '@app/database';
+import { DBConnectionName } from '@app/enums';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsSelect, Repository } from 'typeorm';
@@ -8,7 +9,7 @@ import { UpdateStateDTO } from './dto';
 @Injectable()
 export class StatesService {
     constructor(
-        @InjectRepository(StateEntity)
+        @InjectRepository(StateEntity, DBConnectionName.PostgresSQL)
         private readonly stateRepository: Repository<StateEntity>,
     ) {}
 

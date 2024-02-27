@@ -1,4 +1,5 @@
 import { AccountEntity, ConfirmationEntity } from '@app/database';
+import { DBConnectionName } from '@app/enums';
 import { assert } from '@app/utilities';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,9 +10,9 @@ import { ConfirmOptions, SendOptions } from './types';
 @Injectable()
 export class AppConfirmationService {
     constructor(
-        @InjectRepository(ConfirmationEntity)
+        @InjectRepository(ConfirmationEntity, DBConnectionName.PostgresSQL)
         private readonly confirmationRepository: Repository<ConfirmationEntity>,
-        @InjectRepository(AccountEntity)
+        @InjectRepository(AccountEntity, DBConnectionName.PostgresSQL)
         private readonly accountRepository: Repository<AccountEntity>,
     ) {}
 

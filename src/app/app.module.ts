@@ -8,6 +8,7 @@ import {
     WidgetModule,
 } from '@app/controllers';
 import { AccountEntity, ConfirmationEntity, DatabaseModule, WidgetEntity } from '@app/database';
+import { DBConnectionName } from '@app/enums';
 import {
     provideGlobalFilters,
     provideGlobalGuards,
@@ -23,7 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([ AccountEntity, ConfirmationEntity, WidgetEntity ]),
+        TypeOrmModule.forFeature([ AccountEntity, ConfirmationEntity, WidgetEntity ], DBConnectionName.PostgresSQL),
         StripeModule.forRootAsync({
             inject: [ ConfigService ],
             useFactory: (configService: ConfigService) => ({

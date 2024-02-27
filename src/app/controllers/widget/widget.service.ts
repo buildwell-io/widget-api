@@ -1,4 +1,5 @@
 import { AccountEntity, WidgetEntity } from '@app/database';
+import { DBConnectionName } from '@app/enums';
 import { Paginated, PaginationRequest } from '@app/interfaces';
 import { assert } from '@app/utilities';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
@@ -11,9 +12,9 @@ import { CreateWidgetDTO, UpdateWidgetDTO } from './dto';
 @Injectable()
 export class WidgetService {
     constructor(
-        @InjectRepository(WidgetEntity)
+        @InjectRepository(WidgetEntity, DBConnectionName.PostgresSQL)
         private readonly widgetRepository: Repository<WidgetEntity>,
-        @InjectRepository(AccountEntity)
+        @InjectRepository(AccountEntity, DBConnectionName.PostgresSQL)
         private readonly accountRepository: Repository<AccountEntity>,
     ) {}
 

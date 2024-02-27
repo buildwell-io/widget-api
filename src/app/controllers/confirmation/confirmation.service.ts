@@ -1,5 +1,5 @@
 import { AccountEntity, ConfirmationEntity } from '@app/database';
-import { ConfirmationAction } from '@app/enums';
+import { ConfirmationAction, DBConnectionName } from '@app/enums';
 import { AppConfirmationService, AppMailService } from '@app/services';
 import { assert } from '@app/utilities';
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
@@ -14,9 +14,9 @@ export class ConfirmationService {
     private readonly logger = new Logger('ConfirmationService');
 
     constructor(
-        @InjectRepository(ConfirmationEntity)
+        @InjectRepository(ConfirmationEntity, DBConnectionName.PostgresSQL)
         private readonly confirmationRepository: Repository<ConfirmationEntity>,
-        @InjectRepository(AccountEntity)
+        @InjectRepository(AccountEntity, DBConnectionName.PostgresSQL)
         private readonly accountRepository: Repository<AccountEntity>,
         private readonly appConfirmationService: AppConfirmationService,
         private readonly appMailService: AppMailService,

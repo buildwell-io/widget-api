@@ -1,4 +1,5 @@
 import { CountryEntity, StateEntity } from '@app/database';
+import { DBConnectionName } from '@app/enums';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsSelect, Repository } from 'typeorm';
@@ -9,7 +10,7 @@ import { StatesService } from './states.service';
 @Injectable()
 export class CountriesService {
     constructor(
-        @InjectRepository(CountryEntity)
+        @InjectRepository(CountryEntity, DBConnectionName.PostgresSQL)
         private readonly countryRepository: Repository<CountryEntity>,
         private readonly statesService: StatesService,
     ) {}

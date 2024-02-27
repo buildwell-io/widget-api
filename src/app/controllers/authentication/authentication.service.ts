@@ -1,4 +1,5 @@
 import { AccountEntity } from '@app/database';
+import { DBConnectionName } from '@app/enums';
 import { AuthResponse } from '@app/interfaces';
 import { assert } from '@app/utilities';
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
@@ -13,7 +14,7 @@ import { SignInDTO, SignUpDTO } from './dto';
 @Injectable()
 export class AuthenticationService {
     constructor(
-        @InjectRepository(AccountEntity)
+        @InjectRepository(AccountEntity, DBConnectionName.PostgresSQL)
         private readonly accountRepository: Repository<AccountEntity>,
         private readonly configService: ConfigService,
         private readonly jwtService: JwtService,
