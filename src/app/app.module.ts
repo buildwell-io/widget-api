@@ -1,5 +1,6 @@
 import { CustomConfigModule } from '@app/config';
 import {
+    AccountBillingModule,
     AccountModule,
     AuthenticationModule,
     CompanyModule,
@@ -54,6 +55,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         DatabaseModule,
         CSCModule,
         AccountModule,
+        AccountBillingModule,
         AuthenticationModule,
         ConfirmationModule,
         WidgetModule,

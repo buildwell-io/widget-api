@@ -18,7 +18,7 @@ import { ChangePasswordDTO, UpdateDTO } from './dto';
 export class AccountService {
     constructor(
         @InjectRepository(AccountEntity, DBConnectionName.PostgresSQL)
-        private readonly accountRepository: Repository<AccountEntity>,
+        public readonly accountRepository: Repository<AccountEntity>,
         private readonly appConfirmationService: AppConfirmationService,
         private readonly s3Service: S3Service,
     ) {}

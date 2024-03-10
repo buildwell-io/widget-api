@@ -1,4 +1,5 @@
 export * from './account';
+export * from './account-billing';
 export * from './authentication';
 export * from './company';
 export * from './confirmation';

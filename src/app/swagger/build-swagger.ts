@@ -1,4 +1,5 @@
 import { APP_VERSION, APP_VERSION_AT } from '@app/constants';
+import { StripeAddress } from '@app/controllers';
 import {
     AccountEntity,
     CityEntity,
@@ -31,6 +32,7 @@ export function buildSwagger(app: INestApplication): void {
             AccountEntity,
             ConfirmationEntity,
             WidgetEntity,
+            StripeAddress,
         ],
     });
 

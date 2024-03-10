@@ -36,6 +36,15 @@ export class AccountEntity {
     type: AccountType;
 
     @Column({
+        name: 'stripe_customer_id',
+        type: 'varchar',
+        length: 255,
+        nullable: true,
+    })
+    @ApiProperty({ example: 'cus_PiHZ2zPiwoumip' })
+    stripeCustomerId: string | null;
+
+    @Column({
         name: 'has_confirmed_email',
         type: 'boolean',
         default: false,
@@ -56,7 +65,7 @@ export class AccountEntity {
         nullable: true,
     })
     @ApiProperty({ example: '66aec774-2778-4363-ada3-628df95304d8' })
-    profilePhotoID: string;
+    profilePhotoID: string | null;
 
     @Column({
         name: 'refresh_token',
