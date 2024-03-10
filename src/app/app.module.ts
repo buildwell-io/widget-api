@@ -1,7 +1,8 @@
 import { CustomConfigModule } from '@app/config';
 import {
     AccountModule,
-    AuthenticationModule, CompanyModule,
+    AuthenticationModule,
+    CompanyModule,
     ConfirmationModule,
     CSCModule,
     WidgetAppModule,
@@ -15,8 +16,9 @@ import {
     provideGlobalInterceptors,
     provideGlobalPipes,
 } from '@app/providers';
-import { AppConfirmationService, AppMailService, StripeModule } from '@app/services';
+import { AppConfirmationService, AppMailService, S3Module, StripeModule } from '@app/services';
 import { AccessTokenStrategy, RefreshTokenStrategy } from '@app/strategies';
+import { S3ClientConfig } from '@aws-sdk/client-s3';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -34,6 +36,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
                     typescript: true,
                     telemetry: true,
                 },
+            }),
+        }),
+        S3Module.forRootAsync({
+            inject: [ ConfigService ],
+            useFactory: (configService: ConfigService): S3ClientConfig => ({
+                endpoint: configService.get('S3_ENDPOINT'),
+                credentials: {
+                    accessKeyId: configService.get('S3_ACCESS_KEY'),
+                    secretAccessKey: configService.get('S3_SECRET_KEY'),
+                },
+                region: configService.get('S3_REGION'),
             }),
         }),
         ScheduleModule.forRoot(),

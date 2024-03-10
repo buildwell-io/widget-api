@@ -51,6 +51,14 @@ export class AccountEntity {
     password: string;
 
     @Column({
+        name: 'profile_photo_id',
+        type: 'uuid',
+        nullable: true,
+    })
+    @ApiProperty({ example: '66aec774-2778-4363-ada3-628df95304d8' })
+    profilePhotoID: string;
+
+    @Column({
         name: 'refresh_token',
         type: 'varchar',
         length: 64,

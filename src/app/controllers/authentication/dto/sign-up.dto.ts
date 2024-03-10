@@ -1,8 +1,13 @@
 import { PASSWORD_REGEXP } from '@app/constants';
+import { AccountType } from '@app/enums';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, Matches, MaxLength } from 'class-validator';
+import { IsEmail, IsIn, IsNotEmpty, IsString, Matches, MaxLength } from 'class-validator';
 
 export class SignUpDTO {
+    @IsIn([ AccountType.Client, AccountType.Company ])
+    @ApiProperty({ enum: [ AccountType.Client, AccountType.Company ], example: AccountType.Client })
+    readonly type: AccountType;
+
     @MaxLength(128)
     @IsNotEmpty()
     @IsString()
