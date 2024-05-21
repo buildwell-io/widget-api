@@ -4,6 +4,7 @@ import { Exclude } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { ConfirmationEntity } from './confirmation.entity';
+import { QuizEntity } from './quiz.entity';
 import { WidgetEntity } from './widget.entity';
 
 @Entity('accounts')
@@ -98,4 +99,7 @@ export class AccountEntity {
 
     @OneToMany(() => ConfirmationEntity, (confirmation) => confirmation.account)
     confirmations: ConfirmationEntity[];
+
+    @OneToMany(() => QuizEntity, (quiz) => quiz.owner)
+    quizzes: QuizEntity[];
 }

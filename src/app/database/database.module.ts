@@ -16,6 +16,9 @@ import {
     SubregionEntity,
     WidgetEntity,
 } from './entities';
+import { QuizEntity } from './entities/quiz.entity';
+import { QuizStepEntity } from './entities/quiz-step.entity';
+import { QuizStepAnswerEntity } from './entities/quiz-step-answer.entity';
 
 @Module({
     imports: [
@@ -48,6 +51,9 @@ import {
                         AccountEntity,
                         ConfirmationEntity,
                         WidgetEntity,
+                        QuizEntity,
+                        QuizStepEntity,
+                        QuizStepAnswerEntity,
                     ],
                     synchronize: false,
                 };
