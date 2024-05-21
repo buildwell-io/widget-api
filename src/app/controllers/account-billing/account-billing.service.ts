@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 
 import { AccountService } from '../account/account.service';
 import { CustomerUpdateDTO } from './dto/customer-update.dto';
+import { PaymentMethodCreateDTO } from './dto/payment-method-create.dto';
 
 @Injectable()
 export class AccountBillingService {
@@ -13,14 +14,18 @@ export class AccountBillingService {
         return this.getOrCreateCustomer(user.id);
     }
 
-    async updateStripeCustomer(user: Express.User, params: CustomerUpdateDTO) {
+    async updateStripeCustomer(user: Express.User, payload: CustomerUpdateDTO) {
         const customer = await this.getOrCreateCustomer(user.id);
-        return this.stripeService.stripe.customers.update(customer.id, params);
+        return this.stripeService.stripe.customers.update(customer.id, payload);
     }
 
-    async addPaymentMethod(user: Express.User) {
+    async addPaymentMethod(user: Express.User, payload: PaymentMethodCreateDTO) {
         const customer = await this.getOrCreateCustomer(user);
-        return this.stripeService.stripe.setupIntents.create({ customer: customer.id });
+        return this.stripeService.stripe.paymentMethods.create({
+            customer: customer.id,
+            type: 'card',
+            ...payload,
+        });
     }
 
     async retrievePaymentMethods(user: Express.User) {

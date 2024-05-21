@@ -1,15 +1,17 @@
+import { HttpErrorResponseEntity } from '@app/swagger';
 import { Body, Controller, Get, HttpStatus, Patch, Post, Req, Version } from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { AccountBillingService } from './account-billing.service';
 import { CustomerUpdateDTO } from './dto/customer-update.dto';
+import { PaymentMethodCreateDTO } from './dto/payment-method-create.dto';
 
 @ApiTags('account/billing')
 @Controller('account/billing')
 @ApiBearerAuth()
 @ApiHeader({ name: 'Authorization', required: true, description: 'Bearer <access_token>' })
-@ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
-@ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Account not found' })
+@ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized', type: HttpErrorResponseEntity })
+@ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Account not found', type: HttpErrorResponseEntity })
 export class AccountBillingController {
     constructor(private readonly accountBillingService: AccountBillingService) {}
 
@@ -33,8 +35,8 @@ export class AccountBillingController {
     @Version('1')
     @ApiOperation({ summary: 'Add a payment method' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
-    addPaymentMethod(@Req() { user }: Express.Request) {
-        return this.accountBillingService.addPaymentMethod(user);
+    addPaymentMethod(@Body() payload: PaymentMethodCreateDTO, @Req() { user }: Express.Request) {
+        return this.accountBillingService.addPaymentMethod(user, payload);
     }
 
     @Get('payment-methods')
