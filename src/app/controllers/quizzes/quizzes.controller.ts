@@ -45,7 +45,7 @@ export class QuizzesController {
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: QuizEntity })
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Authorized account is not an owner of the quiz' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Widget not found' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz not found' })
     getById(@Param('quizId', new ParseIntPipe()) quizId: number, @Req() { user }: Express.Request): Promise<QuizEntity> {
         return this.quizzesService.getById(quizId, user);
     }
@@ -57,11 +57,7 @@ export class QuizzesController {
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Authorized account is not an owner of the quiz' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz not found' })
-    update(
-        @Param('quizId') quizId: number,
-        @Body() payload: UpdateQuizDTO,
-        @Req() { user }: Express.Request,
-    ): Promise<QuizEntity> {
+    update(@Param('quizId', new ParseIntPipe()) quizId: number, @Body() payload: UpdateQuizDTO, @Req() { user }: Express.Request): Promise<QuizEntity> {
         return this.quizzesService.update(quizId, payload, user);
     }
 
@@ -71,7 +67,7 @@ export class QuizzesController {
     @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Authorized account is not an owner of the quiz' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Widget not found' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz not found' })
     delete(@Param('quizId', new ParseIntPipe()) quizId: number, @Req() { user }: Express.Request): Promise<void> {
         return this.quizzesService.delete(quizId, user);
     }

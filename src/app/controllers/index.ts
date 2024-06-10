@@ -5,5 +5,7 @@ export * from './company';
 export * from './confirmation';
 export * from './csc';
 export * from './quizzes';
+export * from './quizzes-steps';
+export * from './quizzes-steps-answers';
 export * from './widget';
 export * from './widget-app';

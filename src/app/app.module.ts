@@ -7,6 +7,8 @@ import {
     ConfirmationModule,
     CSCModule,
     QuizzesModule,
+    QuizzesStepsAnswersModule,
+    QuizzesStepsModule,
     WidgetAppModule,
     WidgetModule,
 } from '@app/controllers';
@@ -63,6 +65,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         WidgetAppModule,
         CompanyModule,
         QuizzesModule,
+        QuizzesStepsModule,
+        QuizzesStepsAnswersModule,
     ],
     providers: [
         AppMailService,
