@@ -20,7 +20,7 @@ import { CreateQuizStepDTO } from './dto/create-quiz-step.dto';
 import { UpdateQuizStepDTO } from './dto/update-quiz-step.dto';
 import { QuizzesStepsService } from './quizzes-steps.service';
 
-@ApiTags('quizzes')
+@ApiTags('quizzes-steps')
 @Controller('quizzes/:quizId/steps')
 @AccountType(AccountTypeEnum.Company, AccountTypeEnum.CompanyMember)
 @ApiBearerAuth()
