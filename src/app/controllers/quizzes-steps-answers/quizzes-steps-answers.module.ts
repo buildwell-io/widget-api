@@ -1,14 +1,15 @@
-import { QuizStepAnswerEntity } from '@app/database';
+import { AccountEntity, QuizStepAnswerEntity } from '@app/database';
 import { DBConnectionName } from '@app/enums';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { QuizzesStepsModule } from '../quizzes-steps';
 import { QuizzesStepsAnswersController } from './quizzes-steps-answers.controller';
-import { QuizzesStepsService } from './quizzes-steps-answers.service';
+import { QuizzesStepsAnswersService } from './quizzes-steps-answers.service';
 
 @Module({
-    imports: [ TypeOrmModule.forFeature([ QuizStepAnswerEntity ], DBConnectionName.PostgresSQL) ],
+    imports: [ QuizzesStepsModule, TypeOrmModule.forFeature([ AccountEntity, QuizStepAnswerEntity ], DBConnectionName.PostgresSQL) ],
     controllers: [ QuizzesStepsAnswersController ],
-    providers: [ QuizzesStepsService ],
+    providers: [ QuizzesStepsAnswersService ],
 })
 export class QuizzesStepsAnswersModule {}

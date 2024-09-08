@@ -11,5 +11,6 @@ import { QuizzesStepsService } from './quizzes-steps.service';
     imports: [ QuizzesModule, TypeOrmModule.forFeature([ AccountEntity, QuizEntity, QuizStepEntity ], DBConnectionName.PostgresSQL) ],
     controllers: [ QuizzesStepsController ],
     providers: [ QuizzesStepsService ],
+    exports: [ QuizzesStepsService ],
 })
 export class QuizzesStepsModule {}

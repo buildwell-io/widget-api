@@ -1,10 +1,24 @@
 import { QuizStepAnswerEntity } from '@app/database';
 import { AccountType } from '@app/decorators';
 import { AccountType as AccountTypeEnum } from '@app/enums';
-import { Controller, Delete, Get, HttpStatus, Patch, Post, Req, Version } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpStatus,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Post,
+    Req,
+    Version,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { QuizzesStepsService } from './quizzes-steps-answers.service';
+import { CreateQuizStepAnswerDTO } from './dto/create-quiz-step-answer.dto';
+import { UpdateQuizStepAnswerDTO } from './dto/update-quiz-step-answer.dto';
+import { QuizzesStepsAnswersService } from './quizzes-steps-answers.service';
 
 @ApiTags('quizzes')
 @Controller('quizzes/:quizId/steps/:quizStepId/answers')
@@ -13,7 +27,7 @@ import { QuizzesStepsService } from './quizzes-steps-answers.service';
 @ApiHeader({ name: 'Authorization', required: true, description: 'Bearer <access_token>' })
 @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
 export class QuizzesStepsAnswersController {
-    constructor(private readonly quizzesStepsService: QuizzesStepsService) {}
+    constructor(private readonly quizzesStepsService: QuizzesStepsAnswersService) {}
 
     @Post()
     @Version('1')
@@ -22,8 +36,8 @@ export class QuizzesStepsAnswersController {
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Email is not confirmed' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz/Step not found' })
-    create(@Req() { user }: Express.Request): Promise<QuizStepAnswerEntity> {
-        return this.quizzesStepsService.create();
+    create(@Param('quizStepId', new ParseIntPipe()) quizStepId: number, @Body() payload: CreateQuizStepAnswerDTO, @Req() { user }: Express.Request): Promise<QuizStepAnswerEntity> {
+        return this.quizzesStepsService.create(quizStepId, payload, user);
     }
 
     @Get()
@@ -32,7 +46,9 @@ export class QuizzesStepsAnswersController {
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ QuizStepAnswerEntity ] })
     @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Authorized account is not an owner of the quiz' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz/Step not found' })
-    getAll(@Req() { user }: Express.Request): Promise<QuizStepAnswerEntity[]> {}
+    getAll(@Param('quizStepId', new ParseIntPipe()) quizStepId: number): Promise<QuizStepAnswerEntity[]> {
+        return this.quizzesStepsService.getAll(quizStepId);
+    }
 
     @Get(':quizStepAnswerId')
     @Version('1')
@@ -41,8 +57,8 @@ export class QuizzesStepsAnswersController {
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Authorized account is not an owner of the quiz' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz/Step not found' })
-    getById(@Req() { user }: Express.Request): Promise<QuizStepAnswerEntity> {
-        return this.quizzesStepsService.getById(1);
+    getById(@Param('quizStepAnswerId', new ParseIntPipe()) quizStepAnswerId: number): Promise<QuizStepAnswerEntity> {
+        return this.quizzesStepsService.getById(quizStepAnswerId);
     }
 
     @Patch(':quizStepAnswerId')
@@ -52,8 +68,8 @@ export class QuizzesStepsAnswersController {
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Authorized account is not an owner of the quiz' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz/Step not found' })
-    updateById(@Req() { user }: Express.Request): Promise<QuizStepAnswerEntity> {
-        return this.quizzesStepsService.updateById();
+    updateById(@Param('quizStepAnswerId', new ParseIntPipe()) quizStepAnswerId: number, @Body() payload: UpdateQuizStepAnswerDTO): Promise<QuizStepAnswerEntity> {
+        return this.quizzesStepsService.update(quizStepAnswerId, payload);
     }
 
     @Delete(':quizStepAnswerId')
@@ -63,7 +79,7 @@ export class QuizzesStepsAnswersController {
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Authorized account is not an owner of the quiz' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz/Step not found' })
-    deleteById(@Req() { user }: Express.Request): Promise<void> {
-        return this.quizzesStepsService.deleteById();
+    deleteById(@Param('quizStepAnswerId', new ParseIntPipe()) quizStepAnswerId: number): Promise<void> {
+        return this.quizzesStepsService.delete(quizStepAnswerId);
     }
 }

@@ -19,6 +19,14 @@ export class QuizStepAnswerEntity {
     id: number;
 
     @Column({
+        name: 'quiz_id',
+        type: 'int',
+    })
+    @Exclude()
+    @ApiHideProperty()
+    quizId: number;
+
+    @Column({
         name: 'step_id',
         type: 'int',
     })
@@ -56,6 +64,9 @@ export class QuizStepAnswerEntity {
     updatedAt: Date;
 
     /* RELATIONS */
+
+    // @ManyToMany(() => QuizEntity, (quiz) => quiz.steps)
+    // quiz: QuizEntity;
 
     @ManyToOne(() => QuizStepEntity, (step) => step.answers)
     @JoinColumn({ name: 'step_id' })
