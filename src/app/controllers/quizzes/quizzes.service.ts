@@ -29,6 +29,10 @@ export class QuizzesService {
         return this.quizzesRepository.save(quiz);
     }
 
+    async getAll(user: Express.User): Promise<QuizEntity[]> {
+        return this.quizzesRepository.findBy({ ownerId: user.id });
+    }
+
     async getById(quizId: number, user: Express.User): Promise<QuizEntity> {
         const quiz = await this.quizzesRepository.findOneBy({ id: quizId });
         assert(!!quiz, () => new NotFoundException('Quiz not found'));

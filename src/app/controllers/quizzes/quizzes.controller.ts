@@ -39,6 +39,14 @@ export class QuizzesController {
         return this.quizzesService.create(payload, user);
     }
 
+    @Get()
+    @Version('1')
+    @ApiOperation({ summary: 'Get all logged in user\'s quizzes' })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ QuizEntity ] })
+    getAll({ user }: Express.Request): Promise<QuizEntity[]> {
+        return this.quizzesService.getAll(user);
+    }
+
     @Get(':quizId')
     @Version('1')
     @ApiOperation({ summary: 'Get a single quiz' })
