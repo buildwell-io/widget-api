@@ -1,4 +1,4 @@
-import { AccountEntity, QuizStepEntity } from '@app/database';
+import { AccountEntity, QuizStepAnswerEntity, QuizStepEntity } from '@app/database';
 import { DBConnectionName } from '@app/enums';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,7 +8,7 @@ import { QuizzesStepsController } from './quizzes-steps.controller';
 import { QuizzesStepsService } from './quizzes-steps.service';
 
 @Module({
-    imports: [ QuizzesModule, TypeOrmModule.forFeature([ AccountEntity, QuizStepEntity ], DBConnectionName.PostgresSQL) ],
+    imports: [ QuizzesModule, TypeOrmModule.forFeature([ AccountEntity, QuizStepEntity, QuizStepAnswerEntity ], DBConnectionName.PostgresSQL) ],
     controllers: [ QuizzesStepsController ],
     providers: [ QuizzesStepsService ],
     exports: [ QuizzesStepsService ],

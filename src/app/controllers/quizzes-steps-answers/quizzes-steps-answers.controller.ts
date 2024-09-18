@@ -21,7 +21,7 @@ import { UpdateQuizStepAnswerDTO } from './dto/update-quiz-step-answer.dto';
 import { QuizzesStepsAnswersService } from './quizzes-steps-answers.service';
 
 @ApiTags('quizzes-steps-answers')
-@Controller('quizzes/:quizId/steps/:quizStepId/answers')
+@Controller('quizzes-steps-answers')
 @AccountType(AccountTypeEnum.Company, AccountTypeEnum.CompanyMember)
 @ApiBearerAuth()
 @ApiHeader({ name: 'Authorization', required: true, description: 'Bearer <access_token>' })
@@ -36,50 +36,40 @@ export class QuizzesStepsAnswersController {
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Email is not confirmed' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz/Step not found' })
-    create(@Param('quizStepId', new ParseIntPipe()) quizStepId: number, @Body() payload: CreateQuizStepAnswerDTO, @Req() { user }: Express.Request): Promise<QuizStepAnswerEntity> {
-        return this.quizzesStepsService.create(quizStepId, payload, user);
+    create(@Body() payload: CreateQuizStepAnswerDTO, @Req() { user }: Express.Request): Promise<QuizStepAnswerEntity> {
+        return this.quizzesStepsService.create(payload, user);
     }
 
-    @Get()
-    @Version('1')
-    @ApiOperation({ summary: 'Get all answers related to the step' })
-    @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ QuizStepAnswerEntity ] })
-    @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Authorized account is not an owner of the quiz' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz/Step not found' })
-    getAll(@Param('quizStepId', new ParseIntPipe()) quizStepId: number): Promise<QuizStepAnswerEntity[]> {
-        return this.quizzesStepsService.getAll(quizStepId);
-    }
-
-    @Get(':quizStepAnswerId')
+    @Get(':answerId')
     @Version('1')
     @ApiOperation({ summary: 'Get a single answer' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: QuizStepAnswerEntity })
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Authorized account is not an owner of the quiz' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz/Step not found' })
-    getById(@Param('quizStepAnswerId', new ParseIntPipe()) quizStepAnswerId: number): Promise<QuizStepAnswerEntity> {
-        return this.quizzesStepsService.getById(quizStepAnswerId);
+    getById(@Param('answerId', new ParseIntPipe()) answerId: number): Promise<QuizStepAnswerEntity> {
+        return this.quizzesStepsService.getById(answerId);
     }
 
-    @Patch(':quizStepAnswerId')
+    @Patch(':answerId')
     @Version('1')
     @ApiOperation({ summary: 'Update an answer' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: QuizStepAnswerEntity })
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Authorized account is not an owner of the quiz' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz/Step not found' })
-    updateById(@Param('quizStepAnswerId', new ParseIntPipe()) quizStepAnswerId: number, @Body() payload: UpdateQuizStepAnswerDTO): Promise<QuizStepAnswerEntity> {
-        return this.quizzesStepsService.update(quizStepAnswerId, payload);
+    updateById(@Param('answerId', new ParseIntPipe()) answerId: number, @Body() payload: UpdateQuizStepAnswerDTO): Promise<QuizStepAnswerEntity> {
+        return this.quizzesStepsService.update(answerId, payload);
     }
 
-    @Delete(':quizStepAnswerId')
+    @Delete(':answerId')
     @Version('1')
     @ApiOperation({ summary: 'Delete an answer' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success' })
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Authorized account is not an owner of the quiz' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz/Step not found' })
-    deleteById(@Param('quizStepAnswerId', new ParseIntPipe()) quizStepAnswerId: number): Promise<void> {
-        return this.quizzesStepsService.delete(quizStepAnswerId);
+    deleteById(@Param('answerId', new ParseIntPipe()) answerId: number): Promise<void> {
+        return this.quizzesStepsService.delete(answerId);
     }
 }

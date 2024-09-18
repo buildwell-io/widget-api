@@ -20,11 +20,11 @@ export class QuizzesStepsAnswersService {
         private readonly quizzesStepsService: QuizzesStepsService,
     ) {}
 
-    async create(quizStepId: number, payload: CreateQuizStepAnswerDTO, user: Express.User): Promise<QuizStepAnswerEntity> {
+    async create(payload: CreateQuizStepAnswerDTO, user: Express.User): Promise<QuizStepAnswerEntity> {
         const account = await this.accountRepository.findOneBy({ id: user.id });
         assert(account.hasConfirmedEmail, () => new ForbiddenException('Email is not verified'));
 
-        const quizStep = await this.quizzesStepsService.getById(quizStepId, user);
+        const quizStep = await this.quizzesStepsService.getById(payload.stepId, user);
         const nextQuizStep = await this.quizzesStepsService.getById(payload.nextStepId, user);
 
         const quizStepAnswer = new QuizStepAnswerEntity();
@@ -40,10 +40,6 @@ export class QuizzesStepsAnswersService {
         assert(!!stepAnswer, () => new NotFoundException('Answer not found'));
 
         return stepAnswer;
-    }
-
-    async getAll(stepId: number): Promise<QuizStepAnswerEntity[]> {
-        return this.quizzesStepsAnswerRepository.findBy({ stepId });
     }
 
     async update(answerId: number, payload: UpdateQuizStepAnswerDTO): Promise<QuizStepAnswerEntity> {

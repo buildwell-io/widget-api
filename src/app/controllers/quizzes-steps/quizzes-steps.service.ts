@@ -1,4 +1,4 @@
-import { AccountEntity, QuizStepEntity } from '@app/database';
+import { AccountEntity, QuizStepAnswerEntity, QuizStepEntity } from '@app/database';
 import { DBConnectionName } from '@app/enums';
 import { assert } from '@app/utilities';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
@@ -15,6 +15,8 @@ export class QuizzesStepsService {
     constructor(
         @InjectRepository(QuizStepEntity, DBConnectionName.PostgresSQL)
         private readonly quizzesStepsRepository: Repository<QuizStepEntity>,
+        @InjectRepository(QuizStepAnswerEntity, DBConnectionName.PostgresSQL)
+        private readonly quizzesStepsAnswersRepository: Repository<QuizStepAnswerEntity>,
         @InjectRepository(AccountEntity, DBConnectionName.PostgresSQL)
         private readonly accountRepository: Repository<AccountEntity>,
         private readonly quizzesService: QuizzesService,
@@ -62,5 +64,15 @@ export class QuizzesStepsService {
 
         await this.quizzesStepsRepository.delete({ id: quizStepId });
         return Promise.resolve();
+    }
+
+    async getAnswers(quizStepId: number, user: Express.User): Promise<QuizStepAnswerEntity[]> {
+        const quizStep = await this.quizzesStepsRepository.findOneBy({ id: quizStepId });
+        assert(!!quizStep, () => new NotFoundException('Step not found'));
+
+        // Check for existing and owning
+        await this.quizzesService.getById(quizStep.quizId, user);
+
+        return this.quizzesStepsAnswersRepository.findBy({ stepId: quizStepId });
     }
 }

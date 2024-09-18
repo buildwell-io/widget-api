@@ -11,5 +11,10 @@ export class CreateQuizStepAnswerDTO {
     @IsNotEmpty()
     @IsNumber()
     @ApiProperty({ example: 1337 })
+    readonly stepId: number;
+
+    @IsNotEmpty()
+    @IsNumber()
+    @ApiProperty({ example: 1337 })
     readonly nextStepId: number;
 }
