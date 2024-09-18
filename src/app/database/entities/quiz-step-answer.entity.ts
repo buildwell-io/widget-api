@@ -30,6 +30,7 @@ export class QuizStepAnswerEntity {
         name: 'next_step_id',
         type: 'int',
     })
+    @ApiProperty({ example: 1337 })
     nextStepId: number;
 
     @Column({
