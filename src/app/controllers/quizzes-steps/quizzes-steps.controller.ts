@@ -21,7 +21,7 @@ import { UpdateQuizStepDTO } from './dto/update-quiz-step.dto';
 import { QuizzesStepsService } from './quizzes-steps.service';
 
 @ApiTags('quizzes-steps')
-@Controller('quizzes/:quizId/steps')
+@Controller('quizzes-steps')
 @AccountType(AccountTypeEnum.Company, AccountTypeEnum.CompanyMember)
 @ApiBearerAuth()
 @ApiHeader({ name: 'Authorization', required: true, description: 'Bearer <access_token>' })
@@ -36,11 +36,11 @@ export class QuizzesStepsController {
     @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
     @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Email is not confirmed' })
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz not found' })
-    create(@Param('quizId', new ParseIntPipe()) quizId: number, @Body() payload: CreateQuizStepDTO, @Req() { user }: Express.Request): Promise<QuizStepEntity> {
-        return this.quizzesStepsService.create(quizId, payload, user);
+    create(@Body() payload: CreateQuizStepDTO, @Req() { user }: Express.Request): Promise<QuizStepEntity> {
+        return this.quizzesStepsService.create(payload, user);
     }
 
-    @Get()
+    @Get(':quizId')
     @Version('1')
     @ApiOperation({ summary: 'Get all steps related to the quiz' })
     @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ QuizStepEntity ] })

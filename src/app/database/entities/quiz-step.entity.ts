@@ -1,4 +1,3 @@
-import { QuizStepType } from '@app/enums';
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import {
@@ -6,7 +5,8 @@ import {
     CreateDateColumn,
     Entity,
     JoinColumn,
-    ManyToOne, OneToMany,
+    ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
@@ -34,13 +34,6 @@ export class QuizStepEntity {
     })
     @ApiProperty({ example: 'My step' })
     title: string;
-
-    @Column({
-        type: 'enum',
-        enum: QuizStepType,
-    })
-    @ApiProperty({ example: QuizStepType.Select })
-    type: QuizStepType;
 
     @CreateDateColumn({
         name: 'created_at',

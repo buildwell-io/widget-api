@@ -22,15 +22,14 @@ export class QuizzesStepsService {
         private readonly quizzesService: QuizzesService,
     ) {}
 
-    async create(quizId: number, payload: CreateQuizStepDTO, user: Express.User): Promise<QuizStepEntity> {
+    async create(payload: CreateQuizStepDTO, user: Express.User): Promise<QuizStepEntity> {
         const account = await this.accountRepository.findOneBy({ id: user.id });
         assert(account.hasConfirmedEmail, () => new ForbiddenException('Email is not verified'));
 
-        const quiz = await this.quizzesService.getById(quizId, user);
+        const quiz = await this.quizzesService.getById(payload.quizId, user);
 
         const quizStep = new QuizStepEntity();
         quizStep.title = payload.title;
-        quizStep.type = payload.type;
         quizStep.quiz = quiz;
 
         return this.quizzesStepsRepository.save(quizStep);
