@@ -6,7 +6,7 @@ import {
     CreateDateColumn,
     Entity,
     JoinColumn,
-    ManyToOne, OneToMany,
+    ManyToOne, OneToMany, OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
@@ -34,6 +34,12 @@ export class QuizEntity {
     @ApiProperty({ example: 'My quiz' })
     name: string;
 
+    @Column({
+        name: 'first_step_id',
+        type: 'int',
+    })
+    firstStepId: number;
+
     @CreateDateColumn({
         name: 'created_at',
         type: 'timestamp with time zone',
@@ -53,6 +59,10 @@ export class QuizEntity {
     @ManyToOne(() => AccountEntity, (account) => account.quizzes)
     @JoinColumn({ name: 'owner_id' })
     owner: AccountEntity;
+
+    @OneToOne(() => QuizStepEntity)
+    @JoinColumn({ name: 'first_step_id' })
+    firstStep: QuizStepEntity;
 
     @OneToMany(() => QuizStepEntity, (quiz) => quiz.quiz)
     steps: QuizStepEntity[];

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, MaxLength } from 'class-validator';
 
 export class UpdateQuizDTO {
     @MaxLength(128)
@@ -7,4 +7,9 @@ export class UpdateQuizDTO {
     @IsString()
     @ApiProperty({ example: 'My quiz' })
     readonly name: string;
+
+    @IsNotEmpty()
+    @IsNumber()
+    @ApiProperty({ example: 1337 })
+    readonly firstStepId: number;
 }
