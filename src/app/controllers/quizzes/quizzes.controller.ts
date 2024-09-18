@@ -1,4 +1,4 @@
-import { QuizEntity } from '@app/database';
+import { QuizEntity, QuizStepEntity } from '@app/database';
 import { AccountType } from '@app/decorators';
 import { AccountType as AccountTypeEnum } from '@app/enums';
 import {
@@ -78,5 +78,16 @@ export class QuizzesController {
     @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz not found' })
     delete(@Param('quizId', new ParseIntPipe()) quizId: number, @Req() { user }: Express.Request): Promise<void> {
         return this.quizzesService.delete(quizId, user);
+    }
+
+    @Get(':quizId/steps')
+    @Version('1')
+    @ApiOperation({ summary: 'Get quiz steps' })
+    @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ QuizStepEntity ] })
+    @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid payload' })
+    @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Authorized account is not an owner of the quiz' })
+    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Quiz not found' })
+    getSteps(@Param('quizId', new ParseIntPipe()) quizId: number, @Req() { user }: Express.Request): Promise<QuizStepEntity[]> {
+        return this.quizzesService.getSteps(quizId, user);
     }
 }

@@ -1,4 +1,4 @@
-import { AccountEntity, QuizEntity } from '@app/database';
+import { AccountEntity, QuizEntity, QuizStepEntity } from '@app/database';
 import { DBConnectionName } from '@app/enums';
 import { assert } from '@app/utilities';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
@@ -14,6 +14,8 @@ export class QuizzesService {
     constructor(
         @InjectRepository(QuizEntity, DBConnectionName.PostgresSQL)
         private readonly quizzesRepository: Repository<QuizEntity>,
+        @InjectRepository(QuizStepEntity, DBConnectionName.PostgresSQL)
+        private readonly quizzesStepsRepository: Repository<QuizStepEntity>,
         @InjectRepository(AccountEntity, DBConnectionName.PostgresSQL)
         private readonly accountRepository: Repository<AccountEntity>,
     ) {}
@@ -53,5 +55,12 @@ export class QuizzesService {
         assert(quiz.ownerId === user.id, () => new ForbiddenException('You are not an owner'));
         await this.quizzesRepository.delete({ id: quizId });
         return Promise.resolve();
+    }
+
+    async getSteps(quizId: number, user: Express.User): Promise<QuizStepEntity[]> {
+        const quiz = await this.quizzesRepository.findOneBy({ id: quizId });
+        assert(!!quiz, () => new NotFoundException('Quiz not found'));
+        assert(quiz.ownerId === user.id, () => new ForbiddenException('You are not an owner'));
+        return this.quizzesStepsRepository.findBy({ quizId });
     }
 }

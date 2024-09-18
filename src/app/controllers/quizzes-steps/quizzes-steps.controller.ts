@@ -40,16 +40,6 @@ export class QuizzesStepsController {
         return this.quizzesStepsService.create(payload, user);
     }
 
-    @Get(':quizId')
-    @Version('1')
-    @ApiOperation({ summary: 'Get all steps related to the quiz' })
-    @ApiResponse({ status: HttpStatus.OK, description: 'Success', type: [ QuizStepEntity ] })
-    @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Authorized account is not an owner of the quiz' })
-    @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Step not found' })
-    getAll(@Param('quizId', new ParseIntPipe()) quizId: number, @Req() { user }: Express.Request): Promise<QuizStepEntity[]> {
-        return this.quizzesStepsService.getAll(quizId, user);
-    }
-
     @Get(':quizStepId')
     @Version('1')
     @ApiOperation({ summary: 'Get a single step' })

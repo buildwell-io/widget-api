@@ -1,4 +1,4 @@
-import { AccountEntity, QuizEntity, QuizStepEntity } from '@app/database';
+import { AccountEntity, QuizStepEntity } from '@app/database';
 import { DBConnectionName } from '@app/enums';
 import { assert } from '@app/utilities';
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
@@ -13,8 +13,6 @@ import { UpdateQuizStepDTO } from './dto/update-quiz-step.dto';
 @Injectable()
 export class QuizzesStepsService {
     constructor(
-        @InjectRepository(QuizEntity, DBConnectionName.PostgresSQL)
-        private readonly quizzesRepository: Repository<QuizEntity>,
         @InjectRepository(QuizStepEntity, DBConnectionName.PostgresSQL)
         private readonly quizzesStepsRepository: Repository<QuizStepEntity>,
         @InjectRepository(AccountEntity, DBConnectionName.PostgresSQL)
@@ -33,13 +31,6 @@ export class QuizzesStepsService {
         quizStep.quiz = quiz;
 
         return this.quizzesStepsRepository.save(quizStep);
-    }
-
-    async getAll(quizId: number, user: Express.User): Promise<QuizStepEntity[]> {
-        // Check for existing and owning
-        await this.quizzesService.getById(quizId, user);
-
-        return this.quizzesStepsRepository.findBy({ quizId });
     }
 
     async getById(quizStepId: number, user: Express.User): Promise<QuizStepEntity> {
